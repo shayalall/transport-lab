@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מגמת תחבורה מתקדמת</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0c10;--surface:#111318;--surface2:#181c24;--surface3:#1e2230;
+  --accent:#e8b84b;--accent2:#ff6b35;
+  --text:#f0f0f0;--muted:#6b7280;
+  --green:#22c55e;--red:#ef4444;--blue:#60a5fa;--purple:#a78bfa;
+  --border:rgba(232,184,75,0.15);--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ===== LANDING ===== */
+#landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.bg-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(232,184,75,.08) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 20%,rgba(255,107,53,.06) 0%,transparent 60%);z-index:0;}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(232,184,75,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(232,184,75,.04) 1px,transparent 1px);background-size:60px 60px;animation:gridMove 20s linear infinite;z-index:0;}
+@keyframes gridMove{0%{background-position:0 0}100%{background-position:60px 60px}}
+.speed-lines{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.speed-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(232,184,75,.3),transparent);animation:speedLine linear infinite;}
+@keyframes speedLine{0%{transform:translateX(100vw);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(-100vw);opacity:0}}
+.landing-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 20px;animation:fadeUp .8s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.logo-icon{font-size:48px;margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(232,184,75,.5));animation:glow 3s ease-in-out infinite;}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 20px rgba(232,184,75,.4))}50%{filter:drop-shadow(0 0 40px rgba(232,184,75,.8))}}
+.logo-title{font-family:'Orbitron',monospace;font-size:clamp(18px,4vw,28px);color:var(--accent);letter-spacing:2px;text-shadow:0 0 30px rgba(232,184,75,.4);margin-bottom:6px;text-align:center;}
+.logo-sub{color:var(--muted);font-size:14px;letter-spacing:3px;text-transform:uppercase;}
+.cta-circle{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#1e2433,#0d1018);border:2px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;box-shadow:0 0 40px rgba(232,184,75,.2),inset 0 0 40px rgba(232,184,75,.05);transition:all .3s;animation:circlePulse 4s ease-in-out infinite;}
+@keyframes circlePulse{0%,100%{box-shadow:0 0 40px rgba(232,184,75,.2),inset 0 0 40px rgba(232,184,75,.05)}50%{box-shadow:0 0 80px rgba(232,184,75,.4),inset 0 0 60px rgba(232,184,75,.1)}}
+.cta-circle:hover{transform:scale(1.05);box-shadow:0 0 80px rgba(232,184,75,.5),inset 0 0 60px rgba(232,184,75,.15);}
+.cta-circle::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid transparent;border-top-color:var(--accent);border-right-color:rgba(232,184,75,.3);animation:rotate 3s linear infinite;}
+.cta-circle::after{content:'';position:absolute;inset:-16px;border-radius:50%;border:1px solid transparent;border-bottom-color:rgba(232,184,75,.2);animation:rotate 5s linear infinite reverse;}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.cta-icon{font-size:42px;margin-bottom:8px;}
+.cta-text{font-size:16px;font-weight:700;color:var(--accent);text-align:center;line-height:1.4;}
+
+/* ===== PAGES ===== */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ===== TOP BAR ===== */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10;}
+.back-btn{width:40px;height:40px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;flex-shrink:0;}
+.back-btn:hover{border-color:var(--accent);color:var(--accent);}
+.topbar-info{flex:1;}
+.topbar-name{font-size:18px;font-weight:700;}
+.topbar-sub{font-size:12px;color:var(--muted);}
+
+/* ===== MODAL ===== */
+.overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+.overlay.active{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;animation:modalIn .3s ease both;position:relative;}
+@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-lg{max-width:800px;}
+.modal-header{padding:24px 24px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:18px;font-weight:700;color:var(--accent);}
+.modal-close{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{background:var(--red);color:#fff;}
+.modal-body{padding:24px;}
+
+/* ===== FORMS ===== */
+.form-group{margin-bottom:18px;}
+.form-label{display:block;margin-bottom:7px;font-size:13px;font-weight:500;color:var(--muted);}
+.form-control{width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:'Heebo',sans-serif;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;direction:rtl;}
+.form-control:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,184,75,.1);}
+select.form-control{cursor:pointer;}
+option{background:#1a1d24;}
+.btn{padding:11px 24px;border:none;border-radius:var(--radius);font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#d4a832);color:#0a0c10;box-shadow:0 4px 20px rgba(232,184,75,.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,184,75,.4);}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.btn-danger:hover{background:rgba(239,68,68,.25);}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-full{width:100%;justify-content:center;}
+.btn-sm{padding:7px 14px;font-size:12px;}
+
+/* ===== STEPS ===== */
+.steps{display:flex;gap:8px;margin-bottom:22px;}
+.step{height:3px;flex:1;border-radius:3px;background:var(--surface2);transition:background .3s;}
+.step.active{background:var(--accent);}
+.step.done{background:var(--green);}
+
+/* ===== STATS ===== */
+.stats-bar{display:flex;gap:12px;padding:16px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;text-align:center;flex:1;min-width:80px;}
+.stat-num{font-size:26px;font-weight:900;}
+.stat-num.gold{color:var(--accent);}
+.stat-num.green{color:var(--green);}
+.stat-num.red{color:var(--red);}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ===== REPORT CARDS ===== */
+.reports-list{padding:16px 24px;display:flex;flex-direction:column;gap:10px;}
+.report-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:14px;transition:all .2s;position:relative;overflow:hidden;}
+.report-card::before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;}
+.report-card.submitted::before{background:var(--green);}
+.report-card.missing::before{background:var(--red);}
+.report-card:hover{border-color:rgba(232,184,75,.3);}
+.status-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.status-dot.green{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.5);}
+.status-dot.red{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.5);}
+.report-info{flex:1;min-width:0;}
+.report-name{font-weight:600;font-size:14px;}
+.report-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.report-grade{font-size:12px;color:var(--accent);font-weight:700;margin-top:2px;}
+.report-actions{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
+.action-btn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;border:1px solid;cursor:pointer;font-family:'Heebo',sans-serif;transition:all .2s;display:flex;align-items:center;gap:3px;}
+.action-btn.upload{background:rgba(232,184,75,.1);border-color:rgba(232,184,75,.3);color:var(--accent);}
+.action-btn.upload:hover{background:rgba(232,184,75,.2);}
+.action-btn.edit{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3);color:#818cf8;}
+.action-btn.edit:hover{background:rgba(99,102,241,.2);}
+.action-btn.del{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red);}
+.action-btn.del:hover{background:rgba(239,68,68,.2);}
+.action-btn.download{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:var(--blue);}
+.action-btn.download:hover{background:rgba(96,165,250,.2);}
+
+/* ===== UPLOAD ZONE ===== */
+.upload-zone{border:2px dashed rgba(232,184,75,.3);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-top:14px;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(232,184,75,.05);}
+.upload-zone-icon{font-size:34px;margin-bottom:8px;}
+.upload-zone-text{color:var(--muted);font-size:13px;}
+.upload-zone-hint{font-size:11px;color:var(--muted);margin-top:5px;opacity:.6;}
+input[type=file]{display:none;}
+.file-bar{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--green);margin-top:10px;display:none;align-items:center;gap:8px;}
+
+/* ===== ADMIN ===== */
+#adminPage{background:var(--bg);}
+.admin-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.admin-title-area{display:flex;align-items:center;gap:12px;}
+.admin-title{font-size:20px;font-weight:900;color:var(--accent);}
+.tab-bar{display:flex;gap:4px;background:var(--surface2);padding:4px;border-radius:10px;margin:20px 24px 0;}
+.tab-btn{padding:9px 18px;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
+.tab-btn.active{background:var(--surface);color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.tab-content{display:none;padding:20px 24px;}
+.tab-content.active{display:block;}
+.section-title{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent);}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-btn{padding:7px 16px;border-radius:8px;font-size:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-family:'Heebo',sans-serif;transition:all .2s;}
+.filter-btn.active{background:rgba(232,184,75,.15);border-color:var(--accent);color:var(--accent);}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);}
+.admin-table{width:100%;border-collapse:collapse;background:var(--surface);}
+.admin-table th{padding:12px 14px;background:var(--surface2);font-size:11px;font-weight:600;color:var(--muted);text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;}
+.admin-table td{padding:10px 14px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+.admin-table tr:hover td{background:rgba(255,255,255,.02);}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;}
+.badge.green{background:rgba(34,197,94,.15);color:var(--green);}
+.badge.red{background:rgba(239,68,68,.15);color:var(--red);}
+.badge.gold{background:rgba(232,184,75,.15);color:var(--accent);}
+.grade-input{width:50px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;text-align:center;}
+.grade-input:focus{border-color:var(--accent);outline:none;}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.info-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.info-card-title{font-weight:700;margin-bottom:4px;}
+.info-card-sub{font-size:12px;color:var(--muted);}
+.password-list{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.pw-row{display:flex;justify-content:space-between;padding:6px 10px;background:var(--surface);border-radius:8px;font-size:12px;}
+.pw-name{color:var(--text);}
+.pw-badge{background:rgba(232,184,75,.1);color:var(--accent);padding:2px 8px;border-radius:6px;font-weight:700;}
+.students-add-form{display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:16px;}
+.students-textarea{min-height:120px;resize:vertical;}
+.topic-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
+.topic-name{flex:1;font-size:14px;}
+.topic-class{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 22px;display:flex;align-items:center;gap:8px;font-size:13px;z-index:999;animation:toastIn .3s ease both;box-shadow:0 8px 32px rgba(0,0,0,.4);white-space:nowrap;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.toast.success{border-color:rgba(34,197,94,.4);}
+.toast.error{border-color:rgba(239,68,68,.4);}
+
+/* ===== PIN ===== */
+.pin-dots{display:flex;gap:12px;justify-content:center;margin:20px 0;}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);transition:all .2s;}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent);}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto;}
+.pin-key{padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);font-size:18px;font-weight:700;cursor:pointer;font-family:'Heebo',sans-serif;transition:all .2s;text-align:center;}
+.pin-key:hover{border-color:var(--accent);color:var(--accent);}
+.pin-key:active{transform:scale(.95);}
+
+@media(max-width:640px){
+  .cta-circle{width:175px;height:175px;}
+  .report-actions{flex-direction:column;}
+  .admin-table{font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LANDING ===== -->
+<div id="landing">
+  <div class="bg-overlay"></div>
+  <div class="grid-bg"></div>
+  <div class="speed-lines" id="speedLines"></div>
+  <div class="landing-content">
+    <div style="text-align:center">
+      <div class="logo-icon">🚗</div>
+      <div class="logo-title">מגמת תחבורה מתקדמת</div>
+      <div class="logo-sub" style="margin-top:6px">Advanced Transportation Program</div>
+    </div>
+    <div class="cta-circle" onclick="openLoginModal()">
+      <div class="cta-icon">📋</div>
+      <div class="cta-text">הזנת דוח<br>מעבדה</div>
+    </div>
+    <div style="color:var(--muted);font-size:13px;opacity:.6">לחץ להעלאת דוח מעבדה</div>
+  </div>
+</div>
+
+<!-- ===== STUDENT PAGE ===== -->
+<div id="studentPage" class="page">
+  <div class="topbar">
+    <button class="back-btn" onclick="goHome()">→</button>
+    <div class="topbar-info">
+      <div class="topbar-name" id="studentNameDisplay"></div>
+      <div class="topbar-sub" id="studentClassDisplay"></div>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-num gold" id="statTotal">0</div><div class="stat-label">סה״כ דוחות</div></div>
+    <div class="stat-card"><div class="stat-num green" id="statSubmitted">0</div><div class="stat-label">הוגשו</div></div>
+    <div class="stat-card"><div class="stat-num red" id="statMissing">0</div><div class="stat-label">חסרים</div></div>
+  </div>
+  <div class="reports-list" id="reportsList"></div>
+</div>
+
+<!-- ===== ADMIN PAGE ===== -->
+<div id="adminPage" class="page">
+  <div class="admin-topbar">
+    <div class="admin-title-area">
+      <span style="font-size:24px">⚙</span>
+      <div class="admin-title">פאנל מנהל — מגמת תחבורה</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← יציאה</button>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('status')">📊 סטטוס הגשות</button>
+    <button class="tab-btn" onclick="switchTab('topics')">📚 ניהול נושאים</button>
+    <button class="tab-btn" onclick="switchTab('students')">👥 ניהול תלמידים</button>
+    <button class="tab-btn" onclick="switchTab('passwords')">🔑 סיסמאות</button>
+    <button class="tab-btn" onclick="switchTab('promote')">🎓 קידום שכבות</button>
+    <button class="tab-btn" onclick="switchTab('drive')">☁️ Google Drive</button>
+  </div>
+
+  <!-- TAB: STATUS -->
+  <div class="tab-content active" id="tab-status">
+    <div class="section-title">מצב הגשות לפי כיתה</div>
+    <div class="filter-row" id="adminClassFilter"></div>
+    <div class="table-wrap">
+      <table class="admin-table" id="adminTable">
+        <thead><tr id="adminTableHead"></tr></thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: TOPICS -->
+  <div class="tab-content" id="tab-topics">
+    <div class="section-title">ניהול נושאי דוחות</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">הוסף נושא חדש</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <select class="form-control" id="newTopicClass" style="flex:1;min-width:120px;">
+          <option value="ט">כיתה ט׳</option>
+          <option value="י">כיתה י׳</option>
+          <option value="יא">כיתה י״א</option>
+          <option value="יב">כיתה י״ב</option>
+        </select>
+        <input type="text" class="form-control" id="newTopicName" placeholder="שם הנושא" style="flex:2;">
+        <button class="btn btn-primary" onclick="addTopic()">+ הוסף</button>
+      </div>
+    </div>
+    <div id="topicsList"></div>
+  </div>
+
+  <!-- TAB: STUDENTS -->
+  <div class="tab-content" id="tab-students">
+    <div class="section-title">ניהול תלמידים — הוספת כיתה חדשה</div>
+    <div class="students-add-form">
+      <div style="font-size:13px;color:var(--muted);">הזן שמות תלמידים חדשים (שורה אחת לכל תלמיד, בפורמט: משפחה שם)</div>
+      <select class="form-control" id="addStudentClass">
+        <option value="ט">כיתה ט׳</option>
+        <option value="י">כיתה י׳</option>
+        <option value="יא">כיתה י״א</option>
+        <option value="יב">כיתה י״ב</option>
+      </select>
+      <textarea class="form-control students-textarea" id="newStudentNames" placeholder="אוניי רפאל יהושע&#10;אלקיים אריאל&#10;בן זכריה ישי"></textarea>
+      <button class="btn btn-primary" onclick="addStudents()">💾 שמור תלמידים</button>
+    </div>
+
+    <div class="section-title">רשימת תלמידים נוכחית</div>
+    <div class="filter-row" id="studentClassFilter2"></div>
+    <div id="studentListAdmin"></div>
+  </div>
+
+  <!-- TAB: PASSWORDS -->
+  <div class="tab-content" id="tab-passwords">
+    <div class="section-title">סיסמאות תלמידים</div>
+    <div class="filter-row" id="pwClassFilter"></div>
+    <div id="pwList"></div>
+  </div>
+
+  <!-- TAB: PROMOTE -->
+  <div class="tab-content" id="tab-promote">
+    <div class="section-title">קידום שכבות — אוגוסט</div>
+    <div style="background:var(--surface2);border:1px solid rgba(232,184,75,.3);border-radius:var(--radius);padding:20px;margin-bottom:20px;">
+      <div style="font-size:14px;margin-bottom:8px;">⚠ פעולה זו תבצע:</div>
+      <div style="font-size:13px;color:var(--muted);line-height:2;">
+        • כיתה י״ב ← תועבר לבוגרים <span id="graduateYear"></span><br>
+        • כיתה י״א ← תהפוך לכיתה י״ב<br>
+        • כיתה י׳ ← תהפוך לכיתה י״א<br>
+        • כיתה ט׳ ← תהפוך לכיתה י׳<br>
+        • כיתה ט׳ תתרוקן — יש להזין תלמידים חדשים בלשונית "ניהול תלמידים"
+      </div>
+    </div>
+    <button class="btn btn-danger" onclick="promoteClasses()">🎓 בצע קידום שכבות</button>
+
+    <div style="margin-top:32px;">
+      <div class="section-title">ארכיון בוגרים</div>
+      <div id="alumniList"></div>
+    </div>
+  </div>
+</div>
+
+  <!-- TAB: DRIVE -->
+  <div class="tab-content" id="tab-drive">
+    <div class="section-title">☁️ הגדרת חיבור Google Drive</div>
+
+    <div style="background:var(--surface2);border:1px solid rgba(232,184,75,.3);border-radius:var(--radius);padding:20px;margin-bottom:20px;">
+      <div id="driveStatus" style="font-size:14px;margin-bottom:12px;"></div>
+      <div class="form-group">
+        <label class="form-label">כתובת Apps Script Web App (URL)</label>
+        <input type="text" class="form-control" id="driveUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="saveDriveUrl()">💾 שמור URL</button>
+        <button class="btn btn-ghost" onclick="testDriveUrl()">🔗 בדוק חיבור</button>
+        <button class="btn btn-danger btn-sm" onclick="clearDriveUrl()">✕ נקה</button>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+      <div style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:16px;">📖 הוראות חיבור — צעד אחרי צעד</div>
+      <div id="driveGuide" style="font-size:13px;line-height:2;color:var(--muted);">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--accent);">
+            <div style="font-weight:700;color:var(--text);margin-bottom:4px;">צעד 1 — פתח Google Apps Script</div>
+            <div>עבור לכתובת: <a href="https://script.google.com" target="_blank" style="color:var(--accent);">script.google.com</a><br>
+            לחץ על "פרויקט חדש" (New Project)</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--accent);">
+            <div style="font-weight:700;color:var(--text);margin-bottom:4px;">צעד 2 — הדבק את הקוד</div>
+            <div>מחק את הקוד הקיים בעורך<br>
+            פתח את הקובץ <span style="background:rgba(232,184,75,.1);padding:2px 8px;border-radius:4px;color:var(--accent);">Code.gs</span> שקיבלת<br>
+            הדבק את כל התוכן שלו בעורך Apps Script</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--accent);">
+            <div style="font-weight:700;color:var(--text);margin-bottom:4px;">צעד 3 — פרסם כ-Web App</div>
+            <div>לחץ על <b>Deploy → New deployment</b><br>
+            בחר סוג: <b>Web app</b><br>
+            הגדר "Execute as": <b>Me (שלי)</b><br>
+            הגדר "Who has access": <b>Anyone</b><br>
+            לחץ Deploy → אשר הרשאות</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--green);">
+            <div style="font-weight:700;color:var(--green);margin-bottom:4px;">צעד 4 — העתק את ה-URL</div>
+            <div>לאחר הפרסום יופיע לך URL בפורמט:<br>
+            <span style="background:rgba(34,197,94,.1);padding:3px 10px;border-radius:4px;color:var(--green);font-size:11px;word-break:break-all;">https://script.google.com/macros/s/XXXXX/exec</span><br>
+            העתק אותו והדבק בשדה למעלה ולחץ "שמור URL"</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--blue);">
+            <div style="font-weight:700;color:var(--blue);margin-bottom:4px;">✅ זהו! מה קורה מעכשיו:</div>
+            <div>• כל קובץ שתלמיד מעלה → נשמר אוטומטית בתיקיות Drive שלך<br>
+            • Google Sheets מתעדכן אוטומטית עם כל הגשה<br>
+            • ניתן לגשת מכל מחשב לכתובת: <a href="https://drive.google.com" target="_blank" style="color:var(--blue);">drive.google.com</a><br>
+            • מבנה תיקיות: מגמת תחבורה מתקדמת → כיתה → תלמידים/נושאים</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="loginTitle">🔐 כניסה למערכת</div>
+      <button class="modal-close" onclick="closeOverlay('loginModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="steps">
+        <div class="step active" id="ls1"></div>
+        <div class="step" id="ls2"></div>
+        <div class="step" id="ls3"></div>
+      </div>
+
+      <div id="loginStep1">
+        <div class="form-group">
+          <label class="form-label">בחר כיתה</label>
+          <select class="form-control" id="loginClass">
+            <option value="">-- בחר כיתה --</option>
+            <option value="ט">כיתה ט׳</option>
+            <option value="י">כיתה י׳</option>
+            <option value="יא">כיתה י״א</option>
+            <option value="יב">כיתה י״ב</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="loginStep2()">המשך ←</button>
+      </div>
+
+      <div id="loginStep2" style="display:none">
+        <div class="form-group">
+          <label class="form-label">שם פרטי</label>
+          <input type="text" class="form-control" id="loginFirst" placeholder="הכנס שם פרטי">
+        </div>
+        <div class="form-group">
+          <label class="form-label">שם משפחה</label>
+          <input type="text" class="form-control" id="loginLast" placeholder="הכנס שם משפחה">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="loginStep3()">המשך ←</button>
+      </div>
+
+      <div id="loginStep3" style="display:none">
+        <div style="text-align:center;margin-bottom:16px;color:var(--muted);font-size:14px;">הכנס את הסיסמה שלך</div>
+        <div class="pin-dots" id="pinDots">
+          <div class="pin-dot" id="pd0"></div>
+          <div class="pin-dot" id="pd1"></div>
+          <div class="pin-dot" id="pd2"></div>
+          <div class="pin-dot" id="pd3"></div>
+          <div class="pin-dot" id="pd4"></div>
+        </div>
+        <div class="pin-keypad">
+          <button class="pin-key" onclick="pinPress('1')">1</button>
+          <button class="pin-key" onclick="pinPress('2')">2</button>
+          <button class="pin-key" onclick="pinPress('3')">3</button>
+          <button class="pin-key" onclick="pinPress('4')">4</button>
+          <button class="pin-key" onclick="pinPress('5')">5</button>
+          <button class="pin-key" onclick="pinPress('6')">6</button>
+          <button class="pin-key" onclick="pinPress('7')">7</button>
+          <button class="pin-key" onclick="pinPress('8')">8</button>
+          <button class="pin-key" onclick="pinPress('9')">9</button>
+          <button class="pin-key" onclick="pinPress('del')" style="color:var(--red)">⌫</button>
+          <button class="pin-key" onclick="pinPress('0')">0</button>
+          <button class="pin-key" onclick="pinPress('ok')" style="background:rgba(232,184,75,.1);color:var(--accent)">✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PIN MODAL ===== -->
+<div class="overlay" id="adminPinModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">⚙ כניסת מנהל</div>
+      <button class="modal-close" onclick="closeOverlay('adminPinModal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div style="color:var(--muted);font-size:14px;margin-bottom:16px;">הכנס קוד מנהל</div>
+      <input type="password" class="form-control" id="adminPinInput" placeholder="קוד מנהל" style="text-align:center;font-size:22px;letter-spacing:8px;" maxlength="5">
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary btn-full" onclick="checkAdminPin()">כניסה</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FILE UPLOAD MODAL ===== -->
+<div class="overlay" id="fileModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="fileModalTitle">📤 העלאת דוח</div>
+      <button class="modal-close" onclick="closeOverlay('fileModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--muted);font-size:13px;margin-bottom:14px;" id="fileModalSub"></p>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".docx,.pptx,.pdf" onchange="onFileSelected(this)">
+        <div class="upload-zone-icon">📁</div>
+        <div class="upload-zone-text">לחץ לבחירת קובץ או גרור לכאן</div>
+        <div class="upload-zone-hint">Word (.docx) · PowerPoint (.pptx) · PDF</div>
+      </div>
+      <div class="file-bar" id="fileBar"><span>✅</span><span id="fileBarName"></span></div>
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary btn-full" onclick="confirmUpload()">העלה דוח 📤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GRADE MODAL ===== -->
+<div class="overlay" id="gradeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✏ ציון ומשוב</div>
+      <button class="modal-close" onclick="closeOverlay('gradeModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px;font-size:14px;" id="gradeModalTitle"></div>
+      <div class="form-group">
+        <label class="form-label">ציון (0–100)</label>
+        <input type="number" class="form-control" id="gradeInput" min="0" max="100" placeholder="85">
+      </div>
+      <div class="form-group">
+        <label class="form-label">הערות משוב</label>
+        <textarea class="form-control" id="feedbackInput" rows="3" placeholder="עבודה טובה, כדאי לשפר..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="saveGrade()">💾 שמור</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN BTN -->
+<button onclick="openAdminPin()" style="position:fixed;bottom:20px;left:20px;z-index:50;width:42px;height:42px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;color:var(--muted);font-size:17px;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">⚙</button>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const INIT_STUDENTS = {
+  'ט':['אוניי רפאל יהושע','אלקיים אריאל','בן זכריה ישי','דהן אריאל','דוד עידן','ישראל אילאי','לוי אדיר שלמה','מימון ארי','ספיר ליאם','נחום חיים','קלימי אביאל','קרבול נועם'],
+  'י':['אביטן אליחי','אברג\'ל יוסף','אוחיון עילאי יהונתן','ברגיג אוריאל','ג\'רבי דוד','דמבי אביאל','חתב אריאל אריה','יטייאו אינדלאו','יעקב ליעד','יפרח אליה חביב','כהן אייל','כהן ישראל אביתר','לוי יהב','ראובן אברהם'],
+  'יא':['אבוחצירא אוריאל','אברהמי ליאב','אילו ישראל מלקמו','לוי יותם יעקב','מזרחי יאיר אליהו','נבון אריאל','שוקרון איתן'],
+  'יב':['אבייב חיים','אלי יהב','בבדז\'נוב אריאל','בן יוסף עילאי','גולד נהוראי','גולן נועם','דוידוב נהוראי','וורקי שחר','חביבאן יהונתן','חליס שלו חי','כהן שלו אליה','נתן אוריה','עזיזיאן נתנאל','רפאלי הראל']
+};
+
+// Topics per class
+const INIT_TOPICS = {
+  'ט':[{id:'t1',name:'מערכת העברת הכח — מצערת'}],
+  'י':[{id:'t2',name:'מערכת סיכה — סיכום המערכת'},{id:'t3',name:'מערכת קירור מנוע — משאבת מים'},{id:'t4',name:'מערכת קירור מנוע — טרמוסטט'}],
+  'יא':[{id:'t5',name:'מערכת העברת הכח — גל ארכובה'},{id:'t6',name:'מערכת העברת הכח — גיר אוטומט'},{id:'t7',name:'מערכת היגוי — תפוח הגה'},{id:'t8',name:'מערכת היגוי — בולם'},{id:'t9',name:'מערכת דלק — משאבת דלק'},{id:'t10',name:'מערכת דלק — מזרקים'}],
+  'יב':[] // personalized per student below
+};
+
+// יב - personalized topics per student
+const YUD_BET_PERSONAL = {
+  'אבייב חיים':['רישוי שנתי','דיפרנציאל','רב מודד — מתח','לחץ דחיסה יחסי','סורק תקלות'],
+  'אלי יהב':['מערכת קירור אטימות','הכרת סימונים על הצמיג','הסרה והצבה של מצבר ברכב','החלפת מסנן שמן'],
+  'בבדז\'נוב אריאל':['החלפת פקק בבלוק מנוע','החלפת צמיג','החלפת מסנן אוויר למזגן','בדיקת טמפרטורת מוצא במזגן'],
+  'בן יוסף עילאי':['החלפת רצועה למשאבת מים','רב מודד זרם','חיישן למבדה','בניית מעגל תאורה — אור ראשי'],
+  'גולד נהוראי':['הסרה בדיקה והצבה סליל הצתה','הסרה והחלפת חיישן ייחוס','בניית מעגל אור ראשי תיקני','בדיקת מזרק על השולחן'],
+  'גולן נועם':['דוח אישי 1','דוח אישי 2','דוח אישי 3'],
+  'דוידוב נהוראי':['סורק תקלות','בדיקת פעולת מערכת קירור מבוקרת מחשב','בדיקת אלטרנטור','פ"ה בולם זעזועים','רב מודד — בדיקת דיודה'],
+  'וורקי שחר':['החלפת רפידות בלם','החלפת תפוח הגה','החלפת מיסב גלגל','בניית מעגל תאורה — איתות'],
+  'חביבאן יהונתן':['מנוע בנזין פעולה','בניית מעגל תאורה — אור חניה','בדיקת תקינות צמיגים','הסרה והצבה של גלגל תנופה'],
+  'חליס שלו חי':['הסרה והצבה ראש מנוע','הסרה והצבה של אגזוז כולל בדיקתו','הסרה והצבה של גל ארכובה','בניית מעגל תאורה — אור בלם'],
+  'כהן שלו אליה':['זרם זליגה','שמן מנוע','הצתה','פעולת מתנע — התנעה','ראש מנוע מבוקר מחשב'],
+  'נתן אוריה':['חיישן טמ"פ נוזל קירור','טיפול 10','חוק אוהם','בדיקות מצבר'],
+  'עזיזיאן נתנאל':['הסרה והצבה של מתנע ברכב','הסרה והצבה של אלטרנטור ברכב','בניית מעגל תאורה — אור נסיעה לאחור','החלפת זרועות גלגל'],
+  'רפאלי הראל':['החלפת צלחת בלם','הסרה והצבה של בוכנה וטלטל מגל ארכובה','פ"ה אגן שמן','החלפת גומיית אבק בצריה']
+};
+
+const ADMIN_PIN = '23456';
+const DB_KEY = 'transport_v3';
+
+// ============================================================
+// DB HELPERS
+// ============================================================
+function loadDB(){
+  try{return JSON.parse(localStorage.getItem(DB_KEY))||{};}catch{return {};}
+}
+function saveDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db));}
+
+function initDB(){
+  let db = loadDB();
+  if(!db.students){db.students=JSON.parse(JSON.stringify(INIT_STUDENTS));}
+  if(!db.topics){db.topics=JSON.parse(JSON.stringify(INIT_TOPICS));}
+  if(!db.reports){db.reports={};}
+  if(!db.alumni){db.alumni={};}
+  if(!db.personalTopics){db.personalTopics=JSON.parse(JSON.stringify(YUD_BET_PERSONAL));}
+  saveDB(db);
+  return db;
+}
+
+function getStudentPassword(cls, idx){
+  // password = idx+1 (1-based), padded if needed. We keep simple: just the number
+  return String(idx+1);
+}
+
+function getTopicsForStudent(cls, name){
+  const db=loadDB();
+  if(cls==='יב'){
+    const personal=db.personalTopics||{};
+    return (personal[name]||[]).map((t,i)=>({id:'yb_'+name+'_'+i,name:t}));
+  }
+  return db.topics[cls]||[];
+}
+
+function getReportKey(cls,name,topicId){return cls+'::'+name+'::'+topicId;}
+
+function getReport(cls,name,topicId){
+  const db=loadDB();
+  return db.reports[getReportKey(cls,name,topicId)]||{submitted:false,filename:null,date:null,fileData:null,grade:null,feedback:null};
+}
+function setReport(cls,name,topicId,data){
+  const db=loadDB();
+  db.reports[getReportKey(cls,name,topicId)]=data;
+  saveDB(db);
+}
+function deleteReport(cls,name,topicId){
+  const db=loadDB();
+  const key=getReportKey(cls,name,topicId);
+  if(db.reports[key]){
+    db.reports[key]={submitted:false,filename:null,date:null,fileData:null,grade:null,feedback:null};
+    saveDB(db);
+  }
+}
+
+// ============================================================
+// GOOGLE DRIVE CONFIG
+// ============================================================
+const DRIVE_KEY='transport_drive_url';
+const PRESET_DRIVE_URL='https://script.google.com/macros/s/AKfycbwtd5jHqW_O0QSpJ1MwDABdvO5URH8uONUHVOQrDNt-V_fS59_RIZ7PTg_8E3loTpBCtg/exec';
+function getDriveUrl(){return localStorage.getItem(DRIVE_KEY)||'';}
+function setDriveUrl(url){localStorage.setItem(DRIVE_KEY,url);}
+function hasDrive(){return !!getDriveUrl();}
+async function callDrive(payload){
+  const url=getDriveUrl();
+  if(!url)return null;
+  try{
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+    return await res.json();
+  }catch(e){console.warn('Drive error:',e);return null;}
+}
+async function syncUploadToDrive(cls,name,topicId,topicName,filename,fileData){
+  if(!hasDrive())return;
+  toast('☁️ מסנכרן עם Drive...','');
+  const r=await callDrive({action:'uploadReport',cls,studentName:name,topicId,topicName,filename,fileData});
+  if(r&&r.ok)toast('☁️ נשמר ב-Drive ✅','success');
+}
+async function syncDeleteToDrive(cls,name,topicId,topicName){
+  if(!hasDrive())return;
+  await callDrive({action:'deleteReport',cls,studentName:name,topicId,topicName});
+}
+async function syncGradeToDrive(cls,name,topicId,grade,feedback){
+  if(!hasDrive())return;
+  await callDrive({action:'saveGrade',cls,studentName:name,topicId,grade,feedback});
+}
+// ============================================================
+// STATE
+// ============================================================
+let state={cls:'',name:'',currentTopicId:'',currentTopicName:'',adminFilterCls:'all',adminStudentFilter:'all',pwFilter:'ט',pendingFile:null,pendingFileData:null,gradeTarget:null};
+
+// ============================================================
+// INIT
+// ============================================================
+initDB();
+createSpeedLines();
+// Auto-set Drive URL if not yet configured
+if(!getDriveUrl())setDriveUrl(PRESET_DRIVE_URL);
+document.getElementById('graduateYear').textContent=new Date().getFullYear();
+
+function createSpeedLines(){
+  const c=document.getElementById('speedLines');
+  for(let i=0;i<8;i++){
+    const l=document.createElement('div');l.className='speed-line';
+    const top=20+Math.random()*60,w=100+Math.random()*200,dur=4+Math.random()*6,del=Math.random()*8;
+    l.style.cssText=`top:${top}%;width:${w}px;animation-duration:${dur}s;animation-delay:${del}s`;
+    c.appendChild(l);
+  }
+}
+
+// ============================================================
+// NAV
+// ============================================================
+function showPage(id){
+  document.getElementById('landing').style.display='none';
+  ['studentPage','adminPage'].forEach(p=>document.getElementById(p).className='page');
+  if(id==='landing'){document.getElementById('landing').style.display='flex';}
+  else{document.getElementById(id).className='page active';}
+}
+function goHome(){showPage('landing');}
+
+// ============================================================
+// OVERLAYS
+// ============================================================
+function openOverlay(id){document.getElementById(id).classList.add('active');}
+function closeOverlay(id){document.getElementById(id).classList.remove('active');}
+
+// ============================================================
+// LOGIN FLOW
+// ============================================================
+let pinEntered='';
+let loginStep=1;
+let resolvedStudent='';
+
+function openLoginModal(){
+  loginStep=1;pinEntered='';resolvedStudent='';
+  updateLoginSteps(1);
+  document.getElementById('loginClass').value='';
+  document.getElementById('loginFirst').value='';
+  document.getElementById('loginLast').value='';
+  resetPinDots();
+  openOverlay('loginModal');
+}
+function updateLoginSteps(n){
+  loginStep=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('loginStep'+i).style.display=i===n?'block':'none';
+    const el=document.getElementById('ls'+i);
+    if(i<n)el.className='step done';
+    else if(i===n)el.className='step active';
+    else el.className='step';
+  });
+}
+function loginStep2(){
+  const cls=document.getElementById('loginClass').value;
+  if(!cls){toast('❗ בחר כיתה','error');return;}
+  state.cls=cls;
+  updateLoginSteps(2);
+}
+// ---- Fuzzy matching helpers ----
+function normalize(s){return s.trim().toLowerCase().replace(/['"]/g,'');}
+
+// Levenshtein distance
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0));
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+// Score a student name against query tokens
+function matchScore(studentName, queryTokens){
+  const sTokens=normalize(studentName).split(/\s+/);
+  let totalScore=0;
+  for(const qt of queryTokens){
+    if(!qt)continue;
+    let best=999;
+    for(const st of sTokens){
+      // exact substring bonus
+      if(st.includes(qt)||qt.includes(st)){best=0;break;}
+      const d=levenshtein(qt,st);
+      // only allow distance up to 2 for short tokens, 3 for longer
+      const maxAllowed=qt.length<=3?1:qt.length<=5?2:3;
+      if(d<=maxAllowed&&d<best)best=d;
+    }
+    if(best===999)return 999; // token not found at all → reject
+    totalScore+=best;
+  }
+  return totalScore;
+}
+
+function findCandidates(cls, first, last){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const queryTokens=[normalize(first),normalize(last)].filter(Boolean);
+  if(queryTokens.length===0)return[];
+
+  const scored=students.map(s=>({name:s,score:matchScore(s,queryTokens)}))
+    .filter(x=>x.score<999)
+    .sort((a,b)=>a.score-b.score);
+
+  // Only return candidates with score <= 4 (reasonable fuzzy threshold)
+  return scored.filter(x=>x.score<=4).slice(0,3);
+}
+
+function loginStep3(){
+  const first=document.getElementById('loginFirst').value.trim();
+  const last=document.getElementById('loginLast').value.trim();
+  if(!first&&!last){toast('❗ הכנס לפחות שם אחד','error');return;}
+
+  const candidates=findCandidates(state.cls,first,last);
+
+  if(candidates.length===0){
+    toast('❗ לא נמצא תלמיד תואם בכיתה זו','error');
+    document.getElementById('loginFirst').style.borderColor='var(--red)';
+    document.getElementById('loginLast').style.borderColor='var(--red)';
+    setTimeout(()=>{
+      document.getElementById('loginFirst').style.borderColor='';
+      document.getElementById('loginLast').style.borderColor='';
+    },1500);
+    return;
+  }
+
+  // Show confirm screen
+  showConfirmScreen(candidates);
+}
+
+function showConfirmScreen(candidates){
+  const step2El=document.getElementById('loginStep2');
+  // Inject confirm UI inside step2
+  step2El.innerHTML=`
+    <div style="margin-bottom:16px;">
+      <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">
+        ${candidates.length===1?'האם זה אתה?':'נמצאו מספר תוצאות — בחר:'}
+      </div>
+      ${candidates.map((c,i)=>`
+        <button onclick="selectCandidate('${c.name.replace(/'/g,"\\'")}')"
+          style="width:100%;text-align:right;padding:14px 18px;background:var(--surface2);
+          border:1px solid var(--border);border-radius:var(--radius);color:var(--text);
+          font-family:'Heebo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;
+          margin-bottom:8px;transition:all .2s;display:flex;align-items:center;gap:10px;"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+          <span style="font-size:20px">👤</span>
+          <span>${c.name}</span>
+          ${c.score===0?'<span style="margin-right:auto;font-size:11px;color:var(--green);background:rgba(34,197,94,.1);padding:2px 8px;border-radius:20px;">התאמה מושלמת</span>':''}
+        </button>
+      `).join('')}
+      <button onclick="resetLoginStep2()"
+        style="width:100%;padding:10px;background:transparent;border:1px solid var(--border);
+        border-radius:var(--radius);color:var(--muted);font-family:'Heebo',sans-serif;
+        font-size:13px;cursor:pointer;margin-top:4px;">
+        ← חזור לחיפוש
+      </button>
+    </div>
+  `;
+}
+
+function selectCandidate(name){
+  resolvedStudent=name;
+  pinEntered='';
+  resetPinDots();
+  updateLoginSteps(3);
+}
+
+function resetLoginStep2(){
+  document.getElementById('loginStep2').innerHTML=`
+    <div class="form-group">
+      <label class="form-label">שם פרטי</label>
+      <input type="text" class="form-control" id="loginFirst" placeholder="הכנס שם פרטי">
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם משפחה</label>
+      <input type="text" class="form-control" id="loginLast" placeholder="הכנס שם משפחה">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="loginStep3()">המשך ←</button>
+  `;
+}
+function resetPinDots(){for(let i=0;i<5;i++)document.getElementById('pd'+i).className='pin-dot';}
+function pinPress(k){
+  if(k==='del'){pinEntered=pinEntered.slice(0,-1);}
+  else if(k==='ok'){checkStudentPin();return;}
+  else if(pinEntered.length<5){pinEntered+=k;}
+  updatePinDots();
+}
+function updatePinDots(){
+  for(let i=0;i<5;i++){
+    document.getElementById('pd'+i).className='pin-dot'+(i<pinEntered.length?' filled':'');
+  }
+}
+function checkStudentPin(){
+  if(pinEntered.length<1){toast('❗ הכנס סיסמה','error');return;}
+  const db=loadDB();
+  const students=db.students[state.cls]||[];
+  const idx=students.indexOf(resolvedStudent);
+  const correctPin=String(idx+1);
+  if(pinEntered===correctPin){
+    state.name=resolvedStudent;
+    closeOverlay('loginModal');
+    openStudentPage();
+  } else {
+    toast('❌ סיסמה שגויה','error');
+    pinEntered='';resetPinDots();
+  }
+}
+
+// ============================================================
+// STUDENT PAGE
+// ============================================================
+function openStudentPage(){
+  document.getElementById('studentNameDisplay').textContent=state.name;
+  document.getElementById('studentClassDisplay').textContent='כיתה '+state.cls+'\'  — מגמת תחבורה';
+  renderReports();
+  showPage('studentPage');
+}
+
+function renderReports(){
+  const topics=getTopicsForStudent(state.cls,state.name);
+  let submitted=0;
+  const list=document.getElementById('reportsList');
+  list.innerHTML='';
+
+  topics.forEach(topic=>{
+    const r=getReport(state.cls,state.name,topic.id);
+    if(r.submitted)submitted++;
+    const card=document.createElement('div');
+    card.className='report-card '+(r.submitted?'submitted':'missing');
+
+    const canDelete=state.cls==='יב';
+    card.innerHTML=`
+      <div class="status-dot ${r.submitted?'green':'red'}"></div>
+      <div class="report-info">
+        <div class="report-name">${topic.name}</div>
+        <div class="report-meta">${r.submitted?'✅ הוגש · '+r.filename+' · '+r.date:'🔴 טרם הוגש'}</div>
+        ${r.grade!=null?`<div class="report-grade">ציון: ${r.grade}${r.feedback?' — '+r.feedback:''}</div>`:''}
+      </div>
+      <div class="report-actions">
+        ${!r.submitted?`<button class="action-btn upload" onclick="openFileModal('${topic.id}','${escHtml(topic.name)}','upload')">⬆ העלה</button>`:`
+          <button class="action-btn edit" onclick="openFileModal('${topic.id}','${escHtml(topic.name)}','edit')">✏ החלף</button>
+          <button class="action-btn download" onclick="downloadFile('${topic.id}')">⬇</button>
+          ${canDelete?`<button class="action-btn del" onclick="removeReport('${topic.id}')">🗑</button>`:''}
+        `}
+        ${canDelete&&!r.submitted?`<button class="action-btn del" onclick="deleteTopicStudent('${topic.id}')">🗑 מחק נושא</button>`:''}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  document.getElementById('statTotal').textContent=topics.length;
+  document.getElementById('statSubmitted').textContent=submitted;
+  document.getElementById('statMissing').textContent=topics.length-submitted;
+}
+
+function escHtml(s){return s.replace(/'/g,"&#39;").replace(/"/g,"&quot;");}
+
+// ============================================================
+// FILE UPLOAD
+// ============================================================
+function openFileModal(topicId,topicName,mode){
+  state.currentTopicId=topicId;state.currentTopicName=topicName;
+  state.pendingFile=null;state.pendingFileData=null;
+  document.getElementById('fileModalTitle').textContent=(mode==='edit'?'✏ החלפת':'📤 העלאת')+' דוח';
+  document.getElementById('fileModalSub').textContent=topicName;
+  document.getElementById('fileBar').style.display='none';
+  document.getElementById('fileInput').value='';
+  openOverlay('fileModal');
+}
+function onFileSelected(input){
+  const file=input.files[0];
+  if(!file)return;
+  const ext='.'+file.name.split('.').pop().toLowerCase();
+  if(!['.docx','.pptx','.pdf'].includes(ext)){toast('❗ סוג קובץ לא מורשה','error');return;}
+  state.pendingFile=file;
+  const reader=new FileReader();
+  reader.onload=e=>{state.pendingFileData=e.target.result;};
+  reader.readAsDataURL(file);
+  document.getElementById('fileBar').style.display='flex';
+  document.getElementById('fileBarName').textContent=file.name;
+}
+function confirmUpload(){
+  if(!state.pendingFile){toast('❗ בחר קובץ תחילה','error');return;}
+  const r={submitted:true,filename:state.pendingFile.name,date:new Date().toLocaleDateString('he-IL'),fileData:state.pendingFileData,grade:null,feedback:null};
+  // preserve existing grade
+  const existing=getReport(state.cls,state.name,state.currentTopicId);
+  if(existing.grade!=null){r.grade=existing.grade;r.feedback=existing.feedback;}
+  setReport(state.cls,state.name,state.currentTopicId,r);
+  closeOverlay('fileModal');
+  renderReports();
+  toast('✅ הדוח הועלה בהצלחה!','success');
+  syncUploadToDrive(state.cls,state.name,state.currentTopicId,state.currentTopicName,state.pendingFile.name,state.pendingFileData);
+}
+function removeReport(topicId){
+  if(!confirm('למחוק הגשה זו?'))return;
+  const tname=(getTopicsForStudent(state.cls,state.name).find(t=>t.id===topicId)||{}).name||'';
+  deleteReport(state.cls,state.name,topicId);
+  renderReports();
+  toast('🗑 ההגשה נמחקה');
+  syncDeleteToDrive(state.cls,state.name,topicId,tname);
+}
+function deleteTopicStudent(topicId){
+  if(!confirm('למחוק נושא זה לחלוטין?'))return;
+  const db=loadDB();
+  const p=db.personalTopics||{};
+  const topics=getTopicsForStudent(state.cls,state.name);
+  const t=topics.find(x=>x.id===topicId);
+  if(t&&p[state.name]){
+    p[state.name]=p[state.name].filter(n=>n!==t.name);
+    db.personalTopics=p;
+    saveDB(db);
+  }
+  renderReports();
+  toast('🗑 הנושא נמחק');
+}
+function downloadFile(topicId){
+  const r=getReport(state.cls,state.name,topicId);
+  if(!r.fileData){toast('❗ אין קובץ להורדה','error');return;}
+  const a=document.createElement('a');
+  a.href=r.fileData;a.download=r.filename;a.click();
+}
+
+// ============================================================
+// DRAG & DROP
+// ============================================================
+const uploadZone=document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('dragover');});
+uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop',e=>{
+  e.preventDefault();uploadZone.classList.remove('dragover');
+  const file=e.dataTransfer.files[0];
+  if(file){const dt=new DataTransfer();dt.items.add(file);document.getElementById('fileInput').files=dt.files;onFileSelected(document.getElementById('fileInput'));}
+});
+
+// ============================================================
+// ADMIN
+// ============================================================
+function openAdminPin(){
+  document.getElementById('adminPinInput').value='';
+  openOverlay('adminPinModal');
+  setTimeout(()=>document.getElementById('adminPinInput').focus(),300);
+}
+function checkAdminPin(){
+  const val=document.getElementById('adminPinInput').value;
+  if(val===ADMIN_PIN){closeOverlay('adminPinModal');openAdminPage();}
+  else{toast('❌ קוד שגוי','error');}
+}
+document.getElementById('adminPinInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkAdminPin();});
+
+function openAdminPage(){
+  renderAdminStatus('all');
+  buildAdminFilters();
+  renderTopicsList();
+  renderStudentListAdmin('ט');
+  renderPasswordList('ט');
+  renderAlumni();
+  showPage('adminPage');
+}
+
+function initDriveTab(){
+  const url=getDriveUrl();
+  document.getElementById('driveUrlInput').value=url||'';
+  const status=document.getElementById('driveStatus');
+  if(url){status.innerHTML='<span style="color:var(--green)">✅ Drive מחובר</span>';}
+  else{status.innerHTML='<span style="color:var(--red)">❌ Drive לא מחובר — עקוב אחר ההוראות למטה</span>';}
+}
+function saveDriveUrl(){
+  const url=document.getElementById('driveUrlInput').value.trim();
+  if(!url||!url.includes('script.google.com')){toast('❗ URL לא תקין','error');return;}
+  setDriveUrl(url);
+  initDriveTab();
+  toast('✅ URL נשמר!','success');
+}
+async function testDriveUrl(){
+  const url=document.getElementById('driveUrlInput').value.trim();
+  if(!url){toast('❗ הכנס URL תחילה','error');return;}
+  toast('🔗 בודק חיבור...','');
+  try{
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d.ok)toast('✅ החיבור תקין! Drive מוכן','success');
+    else toast('⚠️ Drive מגיב אבל החזיר שגיאה','error');
+  }catch(e){toast('❌ לא ניתן להתחבר — בדוק את ה-URL','error');}
+}
+function clearDriveUrl(){
+  if(!confirm('לנתק את Drive?'))return;
+  localStorage.removeItem(DRIVE_KEY);
+  initDriveTab();
+  toast('🔌 Drive נותק');
+}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    const tabs=['status','topics','students','passwords','promote'];
+    b.className='tab-btn'+(tabs[i]===name?' active':'');
+  });
+  document.querySelectorAll('.tab-content').forEach(c=>c.className='tab-content');
+  document.getElementById('tab-'+name).className='tab-content active';
+}
+
+// --- STATUS TAB ---
+function buildAdminFilters(){
+  const f=document.getElementById('adminClassFilter');
+  f.innerHTML='';
+  ['all','ט','י','יא','יב'].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(state.adminFilterCls===c?' active':'');
+    b.textContent=c==='all'?'כל הכיתות':'כיתה '+c+'\'';
+    b.onclick=()=>{state.adminFilterCls=c;buildAdminFilters();renderAdminStatus(c);};
+    f.appendChild(b);
+  });
+}
+
+function renderAdminStatus(filterCls){
+  const db=loadDB();
+  const classes=filterCls==='all'?['ט','י','יא','יב']:[filterCls];
+
+  // Build unique topics per class
+  const thead=document.getElementById('adminTableHead');
+  thead.innerHTML='<th>שם</th><th>כיתה</th>';
+
+  // For mixed view we show submitted count
+  if(filterCls==='all'||filterCls==='יב'){
+    // no per-topic columns for yud-bet personal — show aggregate
+  }
+
+  // Find all topic columns for selected classes (excluding yb personal for simplicity in mixed view)
+  let sharedTopics=[];
+  if(filterCls!=='all'&&filterCls!=='יב'){
+    sharedTopics=(db.topics[filterCls]||[]);
+    sharedTopics.forEach(t=>{
+      const th=document.createElement('th');th.textContent=t.name.split('—')[0].trim()+' '+(t.name.includes('—')?t.name.split('—')[1].trim():'');th.title=t.name;thead.appendChild(th);
+    });
+    ['ציון','הורד'].forEach(h=>{const th=document.createElement('th');th.textContent=h;thead.appendChild(th);});
+  } else {
+    ['הוגשו','חסרים','ציון ממוצע'].forEach(h=>{const th=document.createElement('th');th.textContent=h;thead.appendChild(th);});
+  }
+
+  const tbody=document.getElementById('adminTableBody');tbody.innerHTML='';
+
+  classes.forEach(cls=>{
+    (db.students[cls]||[]).forEach(sname=>{
+      const topics=getTopicsForStudent(cls,sname);
+      const reports=topics.map(t=>getReport(cls,sname,t.id));
+      const subCount=reports.filter(r=>r.submitted).length;
+      const grades=reports.filter(r=>r.grade!=null).map(r=>r.grade);
+      const avgGrade=grades.length?Math.round(grades.reduce((a,b)=>a+b,0)/grades.length):null;
+
+      const tr=document.createElement('tr');
+      if(filterCls!=='all'&&filterCls!=='יב'){
+        tr.innerHTML=`<td>${sname}</td><td>${cls}′</td>`;
+        sharedTopics.forEach(t=>{
+          const r=getReport(cls,sname,t.id);
+          tr.innerHTML+=`<td>
+            <span class="badge ${r.submitted?'green':'red'}">${r.submitted?'✅':'❌'}</span>
+          </td>`;
+        });
+        // grade + download cell combined
+        const gradeCell=document.createElement('td');
+        gradeCell.innerHTML=`<input class="grade-input" type="number" min="0" max="100" placeholder="—" value="${''}" oninput="adminGradeChange(this,'${cls}','${sname}','all','${filterCls}')">`;
+        tr.appendChild(gradeCell);
+        const dlCell=document.createElement('td');
+        reports.forEach((r,i)=>{
+          if(r.submitted&&r.fileData){
+            const b=document.createElement('button');
+            b.className='action-btn download';b.style.marginBottom='2px';
+            b.textContent='⬇ '+topics[i].name.split('—').pop().trim().substring(0,12);
+            b.onclick=()=>adminDownload(r);dlCell.appendChild(b);
+          }
+        });
+        tr.appendChild(dlCell);
+      } else {
+        tr.innerHTML=`
+          <td>${sname}</td><td>${cls}′</td>
+          <td><span class="badge green">${subCount}</span></td>
+          <td><span class="badge ${subCount<topics.length?'red':'green'}">${topics.length-subCount}</span></td>
+          <td>${avgGrade!=null?`<span class="badge gold">${avgGrade}</span>`:'—'}</td>
+        `;
+      }
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function adminGradeChange(input,cls,name,topicId,filterCls){
+  // For simplicity when all topics — skip; handle per topic in grade modal
+}
+
+function adminDownload(r){
+  if(!r.fileData)return;
+  const a=document.createElement('a');a.href=r.fileData;a.download=r.filename;a.click();
+}
+
+// Grade modal from admin (click on student name in status)
+document.getElementById('adminTable').addEventListener('click',e=>{
+  const td=e.target.closest('td');
+  if(!td)return;
+  const tr=td.closest('tr');
+  if(!tr)return;
+  const name=tr.cells[0].textContent;
+  const cls=tr.cells[1].textContent.replace('′','');
+  if(e.target.classList.contains('action-btn')&&!e.target.classList.contains('download'))return;
+  // Open grade on first cell click
+  if(td===tr.cells[0]){
+    openGradeModal(cls,name,null,null);
+  }
+});
+
+function openGradeModal(cls,name,topicId,topicName){
+  state.gradeTarget={cls,name,topicId,topicName};
+  document.getElementById('gradeModalTitle').textContent=(topicName||name)+' — '+(topicId?'':cls+'\'');
+  document.getElementById('gradeInput').value='';
+  document.getElementById('feedbackInput').value='';
+  openOverlay('gradeModal');
+}
+function saveGrade(){
+  const g=parseInt(document.getElementById('gradeInput').value);
+  const fb=document.getElementById('feedbackInput').value.trim();
+  if(isNaN(g)||g<0||g>100){toast('❗ ציון לא תקין','error');return;}
+  const {cls,name,topicId}=state.gradeTarget;
+  const db=loadDB();
+  // apply grade to all submitted reports for this student if no specific topic
+  const topics=getTopicsForStudent(cls,name);
+  topics.forEach(t=>{
+    const r=getReport(cls,name,t.id);
+    if(r.submitted){r.grade=g;r.feedback=fb;setReport(cls,name,t.id,r);}
+  });
+  closeOverlay('gradeModal');
+  renderAdminStatus(state.adminFilterCls);
+  toast('✅ הציון נשמר','success');
+  const topicsG=getTopicsForStudent(cls,name);
+  topicsG.forEach(t=>{const r=getReport(cls,name,t.id);if(r.submitted)syncGradeToDrive(cls,name,t.id,g,fb);});
+}
+
+// --- TOPICS TAB ---
+function renderTopicsList(){
+  const db=loadDB();
+  const list=document.getElementById('topicsList');
+  list.innerHTML='';
+  ['ט','י','יא','יב'].forEach(cls=>{
+    const div=document.createElement('div');div.style.marginBottom='20px';
+    div.innerHTML=`<div style="font-weight:700;color:var(--accent);margin-bottom:10px;font-size:14px;">כיתה ${cls}′</div>`;
+    const topics=cls==='יב'?[]:db.topics[cls]||[];
+    if(cls==='יב'){div.innerHTML+='<div style="font-size:12px;color:var(--muted)">כיתה י״ב — נושאים אישיים לכל תלמיד (ניתן לנהל בלשונית תלמידים)</div>';}
+    else if(topics.length===0){div.innerHTML+='<div style="font-size:12px;color:var(--muted)">אין נושאים</div>';}
+    else{
+      topics.forEach(t=>{
+        const row=document.createElement('div');row.className='topic-row';
+        row.innerHTML=`<div class="topic-name">${t.name}</div>
+          <button class="action-btn del btn-sm" onclick="removeTopic('${cls}','${t.id}')">🗑</button>`;
+        div.appendChild(row);
+      });
+    }
+    list.appendChild(div);
+  });
+}
+function addTopic(){
+  const cls=document.getElementById('newTopicClass').value;
+  const name=document.getElementById('newTopicName').value.trim();
+  if(!name){toast('❗ הכנס שם נושא','error');return;}
+  if(cls==='יב'){toast('❗ כיתה י״ב — נושאים אישיים, ערוך בלשונית תלמידים','error');return;}
+  const db=loadDB();
+  db.topics[cls]=db.topics[cls]||[];
+  db.topics[cls].push({id:'t_'+Date.now(),name});
+  saveDB(db);
+  document.getElementById('newTopicName').value='';
+  renderTopicsList();
+  toast('✅ הנושא נוסף','success');
+}
+function removeTopic(cls,id){
+  if(!confirm('למחוק נושא זה?'))return;
+  const db=loadDB();
+  db.topics[cls]=(db.topics[cls]||[]).filter(t=>t.id!==id);
+  saveDB(db);
+  renderTopicsList();
+  toast('🗑 הנושא נמחק');
+}
+
+// --- STUDENTS TAB ---
+function buildStudentFilter2(){
+  const f=document.getElementById('studentClassFilter2');f.innerHTML='';
+  ['ט','י','יא','יב'].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(state.adminStudentFilter===c?' active':'');
+    b.textContent='כיתה '+c+'\'';
+    b.onclick=()=>{state.adminStudentFilter=c;buildStudentFilter2();renderStudentListAdmin(c);};
+    f.appendChild(b);
+  });
+}
+buildStudentFilter2();
+
+function renderStudentListAdmin(cls){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const div=document.getElementById('studentListAdmin');div.innerHTML='';
+  if(students.length===0){div.innerHTML='<div style="color:var(--muted);font-size:13px;">אין תלמידים בכיתה זו</div>';return;}
+  students.forEach((s,i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;font-size:13px;';
+    row.innerHTML=`<span>${i+1}. ${s}</span>
+      <span style="display:flex;gap:6px;align-items:center;">
+        <span class="badge gold">סיסמה: ${getStudentPassword(cls,i)}</span>
+        <button class="action-btn del" onclick="removeStudent('${cls}','${s}')">🗑</button>
+      </span>`;
+    div.appendChild(row);
+  });
+}
+function removeStudent(cls,name){
+  if(!confirm('למחוק תלמיד '+name+'?'))return;
+  const db=loadDB();
+  db.students[cls]=(db.students[cls]||[]).filter(s=>s!==name);
+  saveDB(db);
+  renderStudentListAdmin(cls);
+  toast('🗑 התלמיד נמחק');
+}
+function addStudents(){
+  const cls=document.getElementById('addStudentClass').value;
+  const raw=document.getElementById('newStudentNames').value.trim();
+  if(!raw){toast('❗ הכנס שמות','error');return;}
+  const names=raw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const db=loadDB();
+  db.students[cls]=db.students[cls]||[];
+  names.forEach(n=>{if(!db.students[cls].includes(n))db.students[cls].push(n);});
+  saveDB(db);
+  document.getElementById('newStudentNames').value='';
+  renderStudentListAdmin(cls);
+  buildStudentFilter2();
+  toast('✅ '+names.length+' תלמידים נוספו','success');
+}
+
+// --- PASSWORDS TAB ---
+function buildPwFilter(){
+  const f=document.getElementById('pwClassFilter');f.innerHTML='';
+  ['ט','י','יא','יב'].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(state.pwFilter===c?' active':'');
+    b.textContent='כיתה '+c+'\'';
+    b.onclick=()=>{state.pwFilter=c;buildPwFilter();renderPasswordList(c);};
+    f.appendChild(b);
+  });
+}
+buildPwFilter();
+
+function renderPasswordList(cls){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const div=document.getElementById('pwList');div.innerHTML='';
+  if(students.length===0){div.innerHTML='<div style="color:var(--muted);font-size:13px;">אין תלמידים</div>';return;}
+  const card=document.createElement('div');
+  card.style.cssText='background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;';
+  card.innerHTML=`<div style="font-weight:700;margin-bottom:12px;color:var(--accent);">כיתה ${cls}′ — סיסמאות</div>`;
+  const list=document.createElement('div');list.className='password-list';
+  students.forEach((s,i)=>{
+    const row=document.createElement('div');row.className='pw-row';
+    row.innerHTML=`<span class="pw-name">${i+1}. ${s}</span><span class="pw-badge">${getStudentPassword(cls,i)}</span>`;
+    list.appendChild(row);
+  });
+  card.appendChild(list);div.appendChild(card);
+}
+
+// --- PROMOTE TAB ---
+function promoteClasses(){
+  if(!confirm('⚠ לבצע קידום שכבות? פעולה זו לא ניתנת לביטול.'))return;
+  const db=loadDB();
+  const year=new Date().getFullYear();
+
+  // Archive יב
+  db.alumni=db.alumni||{};
+  db.alumni['בוגרים '+year]=JSON.parse(JSON.stringify(db.students['יב']||[]));
+
+  // Promote
+  db.students['יב']=JSON.parse(JSON.stringify(db.students['יא']||[]));
+  db.students['יא']=JSON.parse(JSON.stringify(db.students['י']||[]));
+  db.students['י']=JSON.parse(JSON.stringify(db.students['ט']||[]));
+  db.students['ט']=[];
+
+  // Promote topics
+  const oldTopics=JSON.parse(JSON.stringify(db.topics));
+  db.topics['יב']=oldTopics['יא']||[];
+  db.topics['יא']=oldTopics['י']||[];
+  db.topics['י']=oldTopics['ט']||[];
+  db.topics['ט']=[];
+
+  saveDB(db);
+  renderAlumni();
+  renderStudentListAdmin('ט');
+  toast('✅ הקידום בוצע בהצלחה! כיתה ט׳ ריקה — הזן תלמידים חדשים','success');
+}
+function renderAlumni(){
+  const db=loadDB();
+  const alumni=db.alumni||{};
+  const div=document.getElementById('alumniList');div.innerHTML='';
+  const keys=Object.keys(alumni);
+  if(keys.length===0){div.innerHTML='<div style="color:var(--muted);font-size:13px;">אין ארכיון עדיין</div>';return;}
+  keys.forEach(year=>{
+    const card=document.createElement('div');
+    card.style.cssText='background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;';
+    card.innerHTML=`<div style="font-weight:700;margin-bottom:8px;color:var(--accent);">🎓 ${year}</div>
+      ${alumni[year].map(s=>`<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">${s}</div>`).join('')}`;
+    div.appendChild(card);
+  });
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer=null;
+function toast(msg,type){
+  const ex=document.querySelector('.toast');if(ex)ex.remove();
+  if(toastTimer)clearTimeout(toastTimer);
+  const t=document.createElement('div');
+  t.className='toast '+(type||'');t.textContent=msg;
+  document.body.appendChild(t);
+  toastTimer=setTimeout(()=>t.remove(),3500);
+}
+</script>
+</body>
+</html>
