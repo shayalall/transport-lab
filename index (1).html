@@ -1,0 +1,2553 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מגמת תחבורה מתקדמת</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0c10;--surface:#111318;--surface2:#181c24;--surface3:#1e2230;
+  --accent:#e8b84b;--accent2:#ff6b35;
+  --text:#f0f0f0;--muted:#6b7280;
+  --green:#22c55e;--red:#ef4444;--blue:#60a5fa;--purple:#a78bfa;
+  --border:rgba(232,184,75,0.15);--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ===== LANDING ===== */
+#landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.bg-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(232,184,75,.08) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 20%,rgba(255,107,53,.06) 0%,transparent 60%);z-index:0;}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(232,184,75,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(232,184,75,.04) 1px,transparent 1px);background-size:60px 60px;animation:gridMove 20s linear infinite;z-index:0;}
+@keyframes gridMove{0%{background-position:0 0}100%{background-position:60px 60px}}
+.speed-lines{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.speed-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(232,184,75,.3),transparent);animation:speedLine linear infinite;}
+@keyframes speedLine{0%{transform:translateX(100vw);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(-100vw);opacity:0}}
+.landing-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px 20px;animation:fadeUp .8s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.logo-icon{font-size:48px;margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(232,184,75,.5));animation:glow 3s ease-in-out infinite;}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 20px rgba(232,184,75,.4))}50%{filter:drop-shadow(0 0 40px rgba(232,184,75,.8))}}
+.logo-title{font-family:'Orbitron',monospace;font-size:clamp(18px,4vw,28px);color:var(--accent);letter-spacing:2px;text-shadow:0 0 30px rgba(232,184,75,.4);margin-bottom:6px;text-align:center;}
+.logo-sub{color:var(--muted);font-size:14px;letter-spacing:3px;text-transform:uppercase;}
+.cta-circle{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#1e2433,#0d1018);border:2px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;box-shadow:0 0 40px rgba(232,184,75,.2),inset 0 0 40px rgba(232,184,75,.05);transition:all .3s;animation:circlePulse 4s ease-in-out infinite;}
+@keyframes circlePulse{0%,100%{box-shadow:0 0 40px rgba(232,184,75,.2),inset 0 0 40px rgba(232,184,75,.05)}50%{box-shadow:0 0 80px rgba(232,184,75,.4),inset 0 0 60px rgba(232,184,75,.1)}}
+.cta-circle:hover{transform:scale(1.05);box-shadow:0 0 80px rgba(232,184,75,.5),inset 0 0 60px rgba(232,184,75,.15);}
+.cta-circle::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid transparent;border-top-color:var(--accent);border-right-color:rgba(232,184,75,.3);animation:rotate 3s linear infinite;}
+.cta-circle::after{content:'';position:absolute;inset:-16px;border-radius:50%;border:1px solid transparent;border-bottom-color:rgba(232,184,75,.2);animation:rotate 5s linear infinite reverse;}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.cta-icon{font-size:42px;margin-bottom:8px;}
+.cta-text{font-size:16px;font-weight:700;color:var(--accent);text-align:center;line-height:1.4;}
+.ferrari-bg{position:absolute;inset:0;z-index:0;
+  background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/2019_Ferrari_488_Pista_%2832846614537%29.jpg/1280px-2019_Ferrari_488_Pista_%2832846614537%29.jpg');
+  background-size:cover;background-position:center 60%;
+  opacity:0.35;}
+
+/* ===== PAGES ===== */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ===== TOP BAR ===== */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:10;}
+.back-btn{width:40px;height:40px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;flex-shrink:0;}
+.back-btn:hover{border-color:var(--accent);color:var(--accent);}
+.topbar-info{flex:1;}
+.topbar-name{font-size:18px;font-weight:700;}
+.topbar-sub{font-size:12px;color:var(--muted);}
+
+/* ===== MODAL ===== */
+.overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;}
+.overlay.active{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;animation:modalIn .3s ease both;position:relative;}
+@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-lg{max-width:800px;}
+.modal-header{padding:24px 24px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:18px;font-weight:700;color:var(--accent);}
+.modal-close{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{background:var(--red);color:#fff;}
+.modal-body{padding:24px;}
+
+/* ===== FORMS ===== */
+.form-group{margin-bottom:18px;}
+.form-label{display:block;margin-bottom:7px;font-size:13px;font-weight:500;color:var(--muted);}
+.form-control{width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:'Heebo',sans-serif;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;direction:rtl;}
+.form-control:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,184,75,.1);}
+select.form-control{cursor:pointer;}
+option{background:#1a1d24;}
+.btn{padding:11px 24px;border:none;border-radius:var(--radius);font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#d4a832);color:#0a0c10;box-shadow:0 4px 20px rgba(232,184,75,.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,184,75,.4);}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.btn-danger:hover{background:rgba(239,68,68,.25);}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-full{width:100%;justify-content:center;}
+.btn-sm{padding:7px 14px;font-size:12px;}
+
+/* ===== STEPS ===== */
+.steps{display:flex;gap:8px;margin-bottom:22px;}
+.step{height:3px;flex:1;border-radius:3px;background:var(--surface2);transition:background .3s;}
+.step.active{background:var(--accent);}
+.step.done{background:var(--green);}
+
+/* ===== STATS ===== */
+.stats-bar{display:flex;gap:12px;padding:16px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;text-align:center;flex:1;min-width:80px;}
+.stat-num{font-size:26px;font-weight:900;}
+.stat-num.gold{color:var(--accent);}
+.stat-num.green{color:var(--green);}
+.stat-num.red{color:var(--red);}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ===== REPORT CARDS ===== */
+.reports-list{padding:16px 24px;display:flex;flex-direction:column;gap:10px;}
+.report-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:14px;transition:all .2s;position:relative;overflow:hidden;}
+.report-card::before{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;}
+.report-card.submitted::before{background:var(--green);}
+.report-card.missing::before{background:var(--red);}
+.report-card:hover{border-color:rgba(232,184,75,.3);}
+.status-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.status-dot.green{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.5);}
+.status-dot.red{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.5);}
+.report-info{flex:1;min-width:0;}
+.report-name{font-weight:600;font-size:14px;}
+.report-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.report-grade{font-size:12px;color:var(--accent);font-weight:700;margin-top:2px;}
+.report-actions{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
+.action-btn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;border:1px solid;cursor:pointer;font-family:'Heebo',sans-serif;transition:all .2s;display:flex;align-items:center;gap:3px;}
+.action-btn.upload{background:rgba(232,184,75,.1);border-color:rgba(232,184,75,.3);color:var(--accent);}
+.action-btn.upload:hover{background:rgba(232,184,75,.2);}
+.action-btn.edit{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3);color:#818cf8;}
+.action-btn.edit:hover{background:rgba(99,102,241,.2);}
+.action-btn.del{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red);}
+.action-btn.del:hover{background:rgba(239,68,68,.2);}
+.action-btn.download{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.3);color:var(--blue);}
+.action-btn.download:hover{background:rgba(96,165,250,.2);}
+
+/* ===== UPLOAD ZONE ===== */
+.upload-zone{border:2px dashed rgba(232,184,75,.3);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:all .2s;margin-top:14px;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(232,184,75,.05);}
+.upload-zone-icon{font-size:34px;margin-bottom:8px;}
+.upload-zone-text{color:var(--muted);font-size:13px;}
+.upload-zone-hint{font-size:11px;color:var(--muted);margin-top:5px;opacity:.6;}
+input[type=file]{display:none;}
+.file-bar{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--green);margin-top:10px;display:none;align-items:center;gap:8px;}
+
+/* ===== ADMIN ===== */
+#adminPage{background:var(--bg);}
+.admin-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.admin-title-area{display:flex;align-items:center;gap:12px;}
+.admin-title{font-size:20px;font-weight:900;color:var(--accent);}
+.tab-bar{display:flex;gap:4px;background:var(--surface2);padding:4px;border-radius:10px;margin:20px 24px 0;}
+.tab-btn{padding:9px 18px;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
+.tab-btn.active{background:var(--surface);color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.tab-content{display:none;padding:20px 24px;}
+.tab-content.active{display:block;}
+.section-title{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent);}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-btn{padding:7px 16px;border-radius:8px;font-size:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-family:'Heebo',sans-serif;transition:all .2s;}
+.filter-btn.active{background:rgba(232,184,75,.15);border-color:var(--accent);color:var(--accent);}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);}
+.admin-table{width:100%;border-collapse:collapse;background:var(--surface);}
+.admin-table th{padding:12px 14px;background:var(--surface2);font-size:11px;font-weight:600;color:var(--muted);text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;}
+.admin-table td{padding:10px 14px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+.admin-table tr:hover td{background:rgba(255,255,255,.02);}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:600;}
+.badge.green{background:rgba(34,197,94,.15);color:var(--green);}
+.badge.red{background:rgba(239,68,68,.15);color:var(--red);}
+.badge.gold{background:rgba(232,184,75,.15);color:var(--accent);}
+.grade-input{width:50px;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:12px;text-align:center;}
+.grade-input:focus{border-color:var(--accent);outline:none;}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.info-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.info-card-title{font-weight:700;margin-bottom:4px;}
+.info-card-sub{font-size:12px;color:var(--muted);}
+.password-list{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.pw-row{display:flex;justify-content:space-between;padding:6px 10px;background:var(--surface);border-radius:8px;font-size:12px;}
+.pw-name{color:var(--text);}
+.pw-badge{background:rgba(232,184,75,.1);color:var(--accent);padding:2px 8px;border-radius:6px;font-weight:700;}
+.students-add-form{display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:16px;}
+.students-textarea{min-height:120px;resize:vertical;}
+.topic-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;}
+.topic-name{flex:1;font-size:14px;}
+.topic-class{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 22px;display:flex;align-items:center;gap:8px;font-size:13px;z-index:999;animation:toastIn .3s ease both;box-shadow:0 8px 32px rgba(0,0,0,.4);white-space:nowrap;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.toast.success{border-color:rgba(34,197,94,.4);}
+.toast.error{border-color:rgba(239,68,68,.4);}
+
+/* ===== PIN ===== */
+.pin-dots{display:flex;gap:12px;justify-content:center;margin:20px 0;}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);transition:all .2s;}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent);}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto;}
+.pin-key{padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);font-size:18px;font-weight:700;cursor:pointer;font-family:'Heebo',sans-serif;transition:all .2s;text-align:center;}
+.pin-key:hover{border-color:var(--accent);color:var(--accent);}
+.pin-key:active{transform:scale(.95);}
+
+@media(max-width:640px){
+  .cta-circle{width:175px;height:175px;}
+  .report-actions{flex-direction:column;}
+  .admin-table{font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LANDING ===== -->
+<div id="landing">
+  <div class="bg-overlay"></div>
+  <div class="grid-bg"></div>
+  <div class="speed-lines" id="speedLines"></div>
+  <div class="ferrari-bg" id="ferrariBg"></div>
+  <div class="landing-content">
+    <div style="text-align:center">
+      <div class="logo-icon">🚗</div>
+      <div class="logo-title">מגמת תחבורה מתקדמת</div>
+      <div class="logo-sub" style="margin-top:6px">Advanced Transportation Program</div>
+    </div>
+    <div class="cta-circle" onclick="openLoginModal()">
+      <div class="cta-icon">📋</div>
+      <div class="cta-text">הזנת דוח<br>מעבדה</div>
+    </div>
+    <div style="color:var(--muted);font-size:13px;opacity:.6">לחץ להעלאת דוח מעבדה</div>
+  </div>
+</div>
+
+<!-- ===== STUDENT PAGE ===== -->
+<div id="studentPage" class="page">
+  <div class="topbar">
+    <button class="back-btn" onclick="goHome()">→</button>
+    <div class="topbar-info">
+      <div class="topbar-name" id="studentNameDisplay"></div>
+      <div class="topbar-sub" id="studentClassDisplay"></div>
+    </div>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-num gold" id="statTotal">0</div><div class="stat-label">סה״כ דוחות</div></div>
+    <div class="stat-card"><div class="stat-num green" id="statSubmitted">0</div><div class="stat-label">הוגשו</div></div>
+    <div class="stat-card"><div class="stat-num red" id="statMissing">0</div><div class="stat-label">חסרים</div></div>
+  </div>
+  <div class="reports-list" id="reportsList"></div>
+</div>
+
+<!-- ===== ADMIN PAGE ===== -->
+<div id="adminPage" class="page">
+  <div class="admin-topbar">
+    <div class="admin-title-area">
+      <span style="font-size:24px">⚙</span>
+      <div class="admin-title">פאנל מנהל — מגמת תחבורה</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="goHome()">← יציאה</button>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('status')">📊 סטטוס הגשות</button>
+    <button class="tab-btn" onclick="switchTab('topics')">📚 ניהול נושאים</button>
+    <button class="tab-btn" onclick="switchTab('students')">👥 ניהול תלמידים</button>
+    <button class="tab-btn" onclick="switchTab('passwords')">🔑 סיסמאות</button>
+    <button class="tab-btn" onclick="switchTab('promote')">🎓 קידום שכבות</button>
+    <button class="tab-btn" onclick="switchTab('drive')">☁️ Google Drive</button>
+    <button class="tab-btn" onclick="switchTab('syllabus')">📅 מתווה שנתי</button>
+    <button class="tab-btn" onclick="switchTab('grades')">⭐ הערכת תלמידים</button>
+    <button class="tab-btn" onclick="switchTab('alerts')">🔔 התראות</button>
+    <button class="tab-btn" onclick="switchTab('message')">📢 הודעה לתלמידים</button>
+    <button class="tab-btn" onclick="switchTab('stats')">📈 סטטיסטיקות</button>
+    <button class="tab-btn" onclick="switchTab('log')">📜 יומן פעולות</button>
+    <button class="tab-btn" onclick="switchTab('backup')">💾 גיבוי</button>
+  </div>
+
+  <!-- TAB: STATUS -->
+  <div class="tab-content active" id="tab-status">
+    <div class="section-title">מצב הגשות לפי כיתה</div>
+    <div class="filter-row" id="adminClassFilter"></div>
+    <div class="table-wrap">
+      <table class="admin-table" id="adminTable">
+        <thead><tr id="adminTableHead"></tr></thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: TOPICS -->
+  <div class="tab-content" id="tab-topics">
+    <div class="section-title">ניהול נושאי דוחות</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;">
+      <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">הוסף נושא חדש</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <select class="form-control" id="newTopicClass" style="flex:1;min-width:120px;">
+          <option value="ט">כיתה ט׳</option>
+          <option value="י">כיתה י׳</option>
+          <option value="יא">כיתה י״א</option>
+          <option value="יב">כיתה י״ב</option>
+        </select>
+        <input type="text" class="form-control" id="newTopicName" placeholder="שם הנושא" style="flex:2;">
+        <button class="btn btn-primary" onclick="addTopic()">+ הוסף</button>
+      </div>
+    </div>
+    <div id="topicsList"></div>
+  </div>
+
+  <!-- TAB: STUDENTS -->
+  <div class="tab-content" id="tab-students">
+    <div class="section-title">ניהול תלמידים — הוספת כיתה חדשה</div>
+    <div class="students-add-form">
+      <div style="font-size:13px;color:var(--muted);">הזן שמות תלמידים חדשים (שורה אחת לכל תלמיד, בפורמט: משפחה שם)</div>
+      <select class="form-control" id="addStudentClass">
+        <option value="ט">כיתה ט׳</option>
+        <option value="י">כיתה י׳</option>
+        <option value="יא">כיתה י״א</option>
+        <option value="יב">כיתה י״ב</option>
+      </select>
+      <textarea class="form-control students-textarea" id="newStudentNames" placeholder="אוניי רפאל יהושע&#10;אלקיים אריאל&#10;בן זכריה ישי"></textarea>
+      <button class="btn btn-primary" onclick="addStudents()">💾 שמור תלמידים</button>
+    </div>
+
+    <div class="section-title">רשימת תלמידים נוכחית</div>
+    <div class="filter-row" id="studentClassFilter2"></div>
+    <div id="studentListAdmin"></div>
+  </div>
+
+  <!-- TAB: PASSWORDS -->
+  <div class="tab-content" id="tab-passwords">
+    <div class="section-title">סיסמאות תלמידים</div>
+    <div class="filter-row" id="pwClassFilter"></div>
+    <div id="pwList"></div>
+  </div>
+
+  <!-- TAB: PROMOTE -->
+  <div class="tab-content" id="tab-promote">
+    <div class="section-title">קידום שכבות — אוגוסט</div>
+    <div style="background:var(--surface2);border:1px solid rgba(232,184,75,.3);border-radius:var(--radius);padding:20px;margin-bottom:20px;">
+      <div style="font-size:14px;margin-bottom:8px;">⚠ פעולה זו תבצע:</div>
+      <div style="font-size:13px;color:var(--muted);line-height:2;">
+        • כיתה י״ב ← תועבר ל<b>מסיימי <span id="graduateYear"></span></b><br>
+        • כיתה י״א ← תהפוך לכיתה י״ב<br>
+        • כיתה י׳ ← תהפוך לכיתה י״א<br>
+        • כיתה ט׳ ← תהפוך לכיתה י׳<br>
+        • כיתה ט׳ תתרוקן — יש להזין תלמידים חדשים בלשונית "ניהול תלמידים"
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+      <button class="btn btn-danger" onclick="promoteClasses()">🎓 בצע קידום שכבות</button>
+      <button class="btn btn-ghost" onclick="undoPromote()" id="undoPromoteBtn" style="display:none;">↩ בטל קידום אחרון</button>
+    </div>
+
+    <div style="margin-top:32px;">
+      <div class="section-title">ארכיון בוגרים</div>
+      <div id="alumniList"></div>
+    </div>
+  </div>
+</div>
+
+  <!-- TAB: SYLLABUS -->
+  <div class="tab-content" id="tab-syllabus">
+    <div class="section-title">📅 מתווה שנתי — העלאת נושאים לשנה חדשה</div>
+    <div style="background:var(--surface2);border:1px solid rgba(232,184,75,.3);border-radius:var(--radius);padding:20px;margin-bottom:20px;font-size:13px;color:var(--muted);line-height:2;">
+      כאן תוכל להגדיר את רשימת הנושאים לכל כיתה לשנת הלימודים הנוכחית.<br>
+      ⚠ שים לב: עדכון המתווה <b>מוסיף</b> נושאים חדשים — הישנים נשמרים.
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;">
+      <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--accent);">הוסף נושאים בבת אחת לכיתה</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <select class="form-control" id="syllabusClass" style="flex:0 0 140px;">
+          <option value="ט">כיתה ט׳</option>
+          <option value="י">כיתה י׳</option>
+          <option value="יא">כיתה י״א</option>
+          <option value="יב">כיתה י״ב</option>
+        </select>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">שורה אחת לכל נושא:</div>
+          <textarea class="form-control" id="syllabusTopics" rows="6" placeholder="מערכת בלמים — רפידות&#10;מערכת בלמים — דיסק&#10;מערכת קירור — מאוורר"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="addSyllabusTopics()">➕ הוסף נושאים</button>
+        <button class="btn btn-danger btn-sm" onclick="clearClassTopics()">🗑 נקה כל הנושאים לכיתה זו</button>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+      <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--accent);">מתווה נוכחי לפי כיתה</div>
+      <div class="filter-row" id="syllabusViewFilter"></div>
+      <div id="syllabusCurrentView"></div>
+    </div>
+  </div>
+
+  <!-- TAB: GRADES -->
+  <div class="tab-content" id="tab-grades">
+    <div class="section-title">⭐ הערכת תלמידים</div>
+
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;font-size:12px;color:var(--muted);display:flex;gap:20px;flex-wrap:wrap;">
+      <span>📋 <b style="color:var(--accent)">60%</b> — דוחות</span>
+      <span>🎭 <b style="color:var(--accent)">20%</b> — התנהלות בשיעור</span>
+      <span>📅 <b style="color:var(--accent)">20%</b> — נוכחות</span>
+    </div>
+
+    <div class="filter-row" id="gradesClassFilter"></div>
+
+    <div class="table-wrap" style="margin-top:12px;">
+      <table class="admin-table" id="gradesTable">
+        <thead>
+          <tr>
+            <th>שם תלמיד</th>
+            <th>ציון דוחות</th>
+            <th>התנהלות בשיעור</th>
+            <th>נוכחות</th>
+            <th>ציון סופי</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody id="gradesTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- TAB: ALERTS -->
+  <div class="tab-content" id="tab-alerts">
+    <div class="section-title">🔔 התראות חסרים</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--muted);">
+      תלמידים שלא הגישו 2 דוחות או יותר
+    </div>
+    <div class="filter-row" id="alertsClassFilter"></div>
+    <div id="alertsList" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+
+  <!-- TAB: MESSAGE -->
+  <div class="tab-content" id="tab-message">
+    <div class="section-title">📢 הודעה לתלמידים</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;">
+      <div class="form-group">
+        <label class="form-label">כותרת ההודעה</label>
+        <input type="text" class="form-control" id="msgTitle" placeholder="לדוגמה: תזכורת הגשה">
+      </div>
+      <div class="form-group">
+        <label class="form-label">תוכן ההודעה</label>
+        <textarea class="form-control" id="msgBody" rows="4" placeholder="הודעה שכל תלמיד יראה בכניסה..."></textarea>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="saveMessage()">💾 פרסם הודעה</button>
+        <button class="btn btn-danger btn-sm" onclick="clearMessage()">🗑 מחק הודעה</button>
+      </div>
+    </div>
+    <div id="msgPreview" style="display:none;background:rgba(232,184,75,.08);border:1px solid var(--accent);border-radius:var(--radius);padding:16px;">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">תצוגה מקדימה — כך יראו התלמידים:</div>
+      <div id="msgPreviewTitle" style="font-weight:700;font-size:15px;color:var(--accent);"></div>
+      <div id="msgPreviewBody" style="font-size:13px;margin-top:6px;line-height:1.8;"></div>
+    </div>
+  </div>
+
+  <!-- TAB: STATS -->
+  <div class="tab-content" id="tab-stats">
+    <div class="section-title">📈 סטטיסטיקות כיתה</div>
+    <div class="filter-row" id="statsClassFilter"></div>
+    <div id="statsContent" style="margin-top:16px;"></div>
+  </div>
+
+  <!-- TAB: LOG -->
+  <div class="tab-content" id="tab-log">
+    <div class="section-title">📜 יומן פעולות</div>
+    <div style="display:flex;justify-content:flex-start;margin-bottom:12px;">
+      <button class="btn btn-danger btn-sm" onclick="clearLog()">🗑 נקה יומן</button>
+    </div>
+    <div id="logList" style="display:flex;flex-direction:column;gap:6px;max-height:500px;overflow-y:auto;"></div>
+  </div>
+
+  <!-- TAB: BACKUP -->
+  <div class="tab-content" id="tab-backup">
+    <div class="section-title">💾 גיבוי ושחזור</div>
+
+    <div style="background:var(--surface2);border:1px solid rgba(34,197,94,.3);border-radius:var(--radius);padding:20px;margin-bottom:16px;">
+      <div style="font-size:15px;font-weight:700;color:var(--green);margin-bottom:8px;">⬇ ייצוא גיבוי</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">מוריד קובץ JSON עם כל הנתונים — תלמידים, דוחות, ציונים, נושאים.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="exportBackup()">💾 הורד גיבוי מלא</button>
+        <button class="btn btn-ghost" onclick="exportGradesExcel()">📊 ייצא ציונות לאקסל</button>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid rgba(239,68,68,.3);border-radius:var(--radius);padding:20px;margin-bottom:16px;">
+      <div style="font-size:15px;font-weight:700;color:var(--red);margin-bottom:8px;">⬆ ייבוא גיבוי</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">⚠ ייבוא גיבוי ידרוס את כל הנתונים הקיימים!</div>
+      <input type="file" id="importFileInput" accept=".json" onchange="importBackup(this)" style="display:none;">
+      <button class="btn btn-danger" onclick="document.getElementById('importFileInput').click()">📂 בחר קובץ גיבוי לשחזור</button>
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+      <div style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:8px;">ℹ מידע על הגיבוי הנוכחי</div>
+      <div id="backupInfo" style="font-size:13px;color:var(--muted);line-height:2;"></div>
+    </div>
+  </div>
+
+  <!-- TAB: DRIVE -->
+  <div class="tab-content" id="tab-drive">
+    <div class="section-title">☁️ הגדרת חיבור Google Drive</div>
+
+    <div style="background:var(--surface2);border:1px solid rgba(232,184,75,.3);border-radius:var(--radius);padding:20px;margin-bottom:20px;">
+      <div id="driveStatus" style="font-size:14px;margin-bottom:12px;"></div>
+      <div class="form-group">
+        <label class="form-label">כתובת Apps Script Web App (URL)</label>
+        <input type="text" class="form-control" id="driveUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" onclick="saveDriveUrl()">💾 שמור URL</button>
+        <button class="btn btn-ghost" onclick="testDriveUrl()">🔗 בדוק חיבור</button>
+        <button class="btn btn-danger btn-sm" onclick="clearDriveUrl()">✕ נקה</button>
+      </div>
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+      <div style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:16px;">📖 הוראות חיבור — צעד אחרי צעד</div>
+      <div id="driveGuide" style="font-size:13px;line-height:2;color:var(--muted);">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--accent);">
+            <div style="font-weight:700;color:var(--text);margin-bottom:4px;">צעד 1 — פתח Google Apps Script</div>
+            <div>עבור לכתובת: <a href="https://script.google.com" target="_blank" style="color:var(--accent);">script.google.com</a><br>
+            לחץ על "פרויקט חדש" (New Project)</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--accent);">
+            <div style="font-weight:700;color:var(--text);margin-bottom:4px;">צעד 2 — הדבק את הקוד</div>
+            <div>מחק את הקוד הקיים בעורך<br>
+            פתח את הקובץ <span style="background:rgba(232,184,75,.1);padding:2px 8px;border-radius:4px;color:var(--accent);">Code.gs</span> שקיבלת<br>
+            הדבק את כל התוכן שלו בעורך Apps Script</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--accent);">
+            <div style="font-weight:700;color:var(--text);margin-bottom:4px;">צעד 3 — פרסם כ-Web App</div>
+            <div>לחץ על <b>Deploy → New deployment</b><br>
+            בחר סוג: <b>Web app</b><br>
+            הגדר "Execute as": <b>Me (שלי)</b><br>
+            הגדר "Who has access": <b>Anyone</b><br>
+            לחץ Deploy → אשר הרשאות</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--green);">
+            <div style="font-weight:700;color:var(--green);margin-bottom:4px;">צעד 4 — העתק את ה-URL</div>
+            <div>לאחר הפרסום יופיע לך URL בפורמט:<br>
+            <span style="background:rgba(34,197,94,.1);padding:3px 10px;border-radius:4px;color:var(--green);font-size:11px;word-break:break-all;">https://script.google.com/macros/s/XXXXX/exec</span><br>
+            העתק אותו והדבק בשדה למעלה ולחץ "שמור URL"</div>
+          </div>
+          <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--blue);">
+            <div style="font-weight:700;color:var(--blue);margin-bottom:4px;">✅ זהו! מה קורה מעכשיו:</div>
+            <div>• כל קובץ שתלמיד מעלה → נשמר אוטומטית בתיקיות Drive שלך<br>
+            • Google Sheets מתעדכן אוטומטית עם כל הגשה<br>
+            • ניתן לגשת מכל מחשב לכתובת: <a href="https://drive.google.com" target="_blank" style="color:var(--blue);">drive.google.com</a><br>
+            • מבנה תיקיות: מגמת תחבורה מתקדמת → כיתה → תלמידים/נושאים</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="loginTitle">🔐 כניסה למערכת</div>
+      <button class="modal-close" onclick="closeOverlay('loginModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="steps">
+        <div class="step active" id="ls1"></div>
+        <div class="step" id="ls2"></div>
+        <div class="step" id="ls3"></div>
+      </div>
+
+      <div id="loginStep1">
+        <div class="form-group">
+          <label class="form-label">בחר כיתה</label>
+          <select class="form-control" id="loginClass">
+            <option value="">-- בחר כיתה --</option>
+            <option value="ט">כיתה ט׳</option>
+            <option value="י">כיתה י׳</option>
+            <option value="יא">כיתה י״א</option>
+            <option value="יב">כיתה י״ב</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="loginStep2()">המשך ←</button>
+      </div>
+
+      <div id="loginStep2" style="display:none">
+        <div class="form-group">
+          <label class="form-label">שם פרטי</label>
+          <input type="text" class="form-control" id="loginFirst" placeholder="הכנס שם פרטי">
+        </div>
+        <div class="form-group">
+          <label class="form-label">שם משפחה</label>
+          <input type="text" class="form-control" id="loginLast" placeholder="הכנס שם משפחה">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="loginStep3()">המשך ←</button>
+      </div>
+
+      <div id="loginStep3" style="display:none">
+        <div style="text-align:center;margin-bottom:16px;color:var(--muted);font-size:14px;">הכנס את הסיסמה שלך</div>
+        <div class="pin-dots" id="pinDots">
+          <div class="pin-dot" id="pd0"></div>
+          <div class="pin-dot" id="pd1"></div>
+          <div class="pin-dot" id="pd2"></div>
+          <div class="pin-dot" id="pd3"></div>
+          <div class="pin-dot" id="pd4"></div>
+        </div>
+        <div class="pin-keypad">
+          <button class="pin-key" onclick="pinPress('1')">1</button>
+          <button class="pin-key" onclick="pinPress('2')">2</button>
+          <button class="pin-key" onclick="pinPress('3')">3</button>
+          <button class="pin-key" onclick="pinPress('4')">4</button>
+          <button class="pin-key" onclick="pinPress('5')">5</button>
+          <button class="pin-key" onclick="pinPress('6')">6</button>
+          <button class="pin-key" onclick="pinPress('7')">7</button>
+          <button class="pin-key" onclick="pinPress('8')">8</button>
+          <button class="pin-key" onclick="pinPress('9')">9</button>
+          <button class="pin-key" onclick="pinPress('del')" style="color:var(--red)">⌫</button>
+          <button class="pin-key" onclick="pinPress('0')">0</button>
+          <button class="pin-key" onclick="pinPress('ok')" style="background:rgba(232,184,75,.1);color:var(--accent)">✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PIN MODAL ===== -->
+<div class="overlay" id="adminPinModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">⚙ כניסת מנהל</div>
+      <button class="modal-close" onclick="closeOverlay('adminPinModal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div style="color:var(--muted);font-size:14px;margin-bottom:16px;">הכנס קוד מנהל</div>
+      <input type="password" class="form-control" id="adminPinInput" placeholder="קוד מנהל" style="text-align:center;font-size:22px;letter-spacing:8px;" maxlength="5">
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary btn-full" onclick="checkAdminPin()">כניסה</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FILE UPLOAD MODAL ===== -->
+<div class="overlay" id="fileModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="fileModalTitle">📤 העלאת דוח</div>
+      <button class="modal-close" onclick="closeOverlay('fileModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--muted);font-size:13px;margin-bottom:14px;" id="fileModalSub"></p>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".docx,.pptx,.pdf" onchange="onFileSelected(this)">
+        <div class="upload-zone-icon">📁</div>
+        <div class="upload-zone-text">לחץ לבחירת קובץ או גרור לכאן</div>
+        <div class="upload-zone-hint">Word (.docx) · PowerPoint (.pptx) · PDF</div>
+      </div>
+      <div class="file-bar" id="fileBar"><span>✅</span><span id="fileBarName"></span></div>
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary btn-full" onclick="confirmUpload()">העלה דוח 📤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GRADE MODAL ===== -->
+<div class="overlay" id="gradeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✏ ציון ומשוב</div>
+      <button class="modal-close" onclick="closeOverlay('gradeModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px;font-size:14px;" id="gradeModalTitle"></div>
+      <div class="form-group">
+        <label class="form-label">ציון (0–100)</label>
+        <input type="number" class="form-control" id="gradeInput" min="0" max="100" placeholder="85">
+      </div>
+      <div class="form-group">
+        <label class="form-label">הערות משוב</label>
+        <textarea class="form-control" id="feedbackInput" rows="3" placeholder="עבודה טובה, כדאי לשפר..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="saveGrade()">💾 שמור</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN BTN -->
+<button onclick="openAdminPin()" style="position:fixed;bottom:20px;left:20px;z-index:50;width:42px;height:42px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);cursor:pointer;color:var(--muted);font-size:17px;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">⚙</button>
+
+<!-- ===== ADMIN STUDENT VIEW MODAL ===== -->
+<div class="overlay" id="adminStudentModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="adminStudentModalTitle">👤 תצוגת תלמיד</div>
+      <button class="modal-close" onclick="closeOverlay('adminStudentModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="adminStudentContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TEACHER PHOTO MODAL ===== -->
+<div class="overlay" id="teacherPhotoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="tpModalTitle">📸 צירוף תמונה לתלמיד</div>
+      <button class="modal-close" onclick="closeOverlay('teacherPhotoModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--muted);font-size:13px;margin-bottom:14px;" id="tpModalSub"></p>
+      <div class="upload-zone" id="tpUploadZone" onclick="document.getElementById('tpFileInput').click()">
+        <input type="file" id="tpFileInput" accept="image/*" onchange="onTeacherPhotoSelected(this)">
+        <div class="upload-zone-icon">🖼</div>
+        <div class="upload-zone-text">לחץ לבחירת תמונה</div>
+        <div class="upload-zone-hint">JPG, PNG, WEBP</div>
+      </div>
+      <div id="tpPreview" style="margin-top:12px;display:none;">
+        <img id="tpPreviewImg" style="max-width:100%;border-radius:10px;max-height:200px;object-fit:contain;">
+      </div>
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary btn-full" onclick="saveTeacherPhoto()">💾 שמור תמונה</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CUSTOM PASSWORD MODAL ===== -->
+<div class="overlay" id="customPwModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🔑 שינוי סיסמה לתלמיד</div>
+      <button class="modal-close" onclick="closeOverlay('customPwModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px;font-size:14px;color:var(--muted);" id="customPwStudentName"></div>
+      <div class="form-group">
+        <label class="form-label">סיסמה חדשה (מספרים בלבד, עד 5 ספרות)</label>
+        <input type="number" class="form-control" id="customPwInput" placeholder="למשל: 1234" min="1" max="99999">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="saveCustomPassword()">💾 שמור סיסמה</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const INIT_STUDENTS = {
+  'ט':['אוניי רפאל יהושע','אלקיים אריאל','בן זכריה ישי','דהן אריאל','דוד עידן','ישראל אילאי','לוי אדיר שלמה','מימון ארי','ספיר ליאם','נחום חיים','קלימי אביאל','קרבול נועם'],
+  'י':['אביטן אליחי','אברג\'ל יוסף','אוחיון עילאי יהונתן','ברגיג אוריאל','ג\'רבי דוד','דמבי אביאל','חתב אריאל אריה','יטייאו אינדלאו','יעקב ליעד','יפרח אליה חביב','כהן אייל','כהן ישראל אביתר','לוי יהב','ראובן אברהם'],
+  'יא':['אבוחצירא אוריאל','אברהמי ליאב','אילו ישראל מלקמו','לוי יותם יעקב','מזרחי יאיר אליהו','נבון אריאל','שוקרון איתן'],
+  'יב':['אבייב חיים','אלי יהב','בבדז\'נוב אריאל','בן יוסף עילאי','גולד נהוראי','גולן נועם','דוידוב נהוראי','וורקי שחר','חביבאן יהונתן','חליס שלו חי','כהן שלו אליה','נתן אוריה','עזיזיאן נתנאל','רפאלי הראל']
+};
+
+// Topics per class
+const INIT_TOPICS = {
+  'ט':[{id:'t1',name:'מערכת העברת הכח — מצערת'}],
+  'י':[{id:'t2',name:'מערכת סיכה — סיכום המערכת'},{id:'t3',name:'מערכת קירור מנוע — משאבת מים'},{id:'t4',name:'מערכת קירור מנוע — טרמוסטט'}],
+  'יא':[{id:'t5',name:'מערכת העברת הכח — גל ארכובה'},{id:'t6',name:'מערכת העברת הכח — גיר אוטומט'},{id:'t7',name:'מערכת היגוי — תפוח הגה'},{id:'t8',name:'מערכת היגוי — בולם'},{id:'t9',name:'מערכת דלק — משאבת דלק'},{id:'t10',name:'מערכת דלק — מזרקים'}],
+  'יב':[] // personalized per student below
+};
+
+// יב - personalized topics per student
+const YUD_BET_PERSONAL = {
+  'אבייב חיים':['רישוי שנתי','דיפרנציאל','רב מודד — מתח','לחץ דחיסה יחסי','סורק תקלות'],
+  'אלי יהב':['מערכת קירור אטימות','הכרת סימונים על הצמיג','הסרה והצבה של מצבר ברכב','החלפת מסנן שמן'],
+  'בבדז\'נוב אריאל':['החלפת פקק בבלוק מנוע','החלפת צמיג','החלפת מסנן אוויר למזגן','בדיקת טמפרטורת מוצא במזגן'],
+  'בן יוסף עילאי':['החלפת רצועה למשאבת מים','רב מודד זרם','חיישן למבדה','בניית מעגל תאורה — אור ראשי'],
+  'גולד נהוראי':['הסרה בדיקה והצבה סליל הצתה','הסרה והחלפת חיישן ייחוס','בניית מעגל אור ראשי תיקני','בדיקת מזרק על השולחן'],
+  'גולן נועם':['דוח אישי 1','דוח אישי 2','דוח אישי 3'],
+  'דוידוב נהוראי':['סורק תקלות','בדיקת פעולת מערכת קירור מבוקרת מחשב','בדיקת אלטרנטור','פ"ה בולם זעזועים','רב מודד — בדיקת דיודה'],
+  'וורקי שחר':['החלפת רפידות בלם','החלפת תפוח הגה','החלפת מיסב גלגל','בניית מעגל תאורה — איתות'],
+  'חביבאן יהונתן':['מנוע בנזין פעולה','בניית מעגל תאורה — אור חניה','בדיקת תקינות צמיגים','הסרה והצבה של גלגל תנופה'],
+  'חליס שלו חי':['הסרה והצבה ראש מנוע','הסרה והצבה של אגזוז כולל בדיקתו','הסרה והצבה של גל ארכובה','בניית מעגל תאורה — אור בלם'],
+  'כהן שלו אליה':['זרם זליגה','שמן מנוע','הצתה','פעולת מתנע — התנעה','ראש מנוע מבוקר מחשב'],
+  'נתן אוריה':['חיישן טמ"פ נוזל קירור','טיפול 10','חוק אוהם','בדיקות מצבר'],
+  'עזיזיאן נתנאל':['הסרה והצבה של מתנע ברכב','הסרה והצבה של אלטרנטור ברכב','בניית מעגל תאורה — אור נסיעה לאחור','החלפת זרועות גלגל'],
+  'רפאלי הראל':['החלפת צלחת בלם','הסרה והצבה של בוכנה וטלטל מגל ארכובה','פ"ה אגן שמן','החלפת גומיית אבק בצריה']
+};
+
+const ADMIN_PIN = '23456';
+const DB_KEY = 'transport_v3';
+
+// ============================================================
+// DB HELPERS
+// ============================================================
+function loadDB(){
+  try{return JSON.parse(localStorage.getItem(DB_KEY))||{};}catch{return {};}
+}
+function saveDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db));}
+
+function initDB(){
+  let db = loadDB();
+  if(!db.students){db.students=JSON.parse(JSON.stringify(INIT_STUDENTS));}
+  if(!db.topics){db.topics=JSON.parse(JSON.stringify(INIT_TOPICS));}
+  if(!db.reports){db.reports={};}
+  if(!db.alumni){db.alumni={};}
+  if(!db.personalTopics){db.personalTopics=JSON.parse(JSON.stringify(YUD_BET_PERSONAL));}
+  saveDB(db);
+  return db;
+}
+
+function getStudentPassword(cls, idx){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const name=students[idx]||'';
+  const customPws=db.customPasswords||{};
+  return customPws[cls+'::'+name]||String(idx+1);
+}
+
+function getTopicsForStudent(cls, name){
+  const db=loadDB();
+  if(cls==='יב'){
+    const personal=db.personalTopics||{};
+    const topics=(personal[name]||[]).map((t,i)=>({id:'yb_'+name+'_'+i,name:t}));
+    // Final project always FIRST
+    const fp={id:'final_project_'+name,name:'🏆 פרויקט גמר',isFinalProject:true};
+    return [fp,...topics];
+  }
+  return db.topics[cls]||[];
+}
+
+function getReportKey(cls,name,topicId){return cls+'::'+name+'::'+topicId;}
+
+function getReport(cls,name,topicId){
+  const db=loadDB();
+  return db.reports[getReportKey(cls,name,topicId)]||{submitted:false,filename:null,date:null,fileData:null,grade:null,feedback:null};
+}
+function setReport(cls,name,topicId,data){
+  const db=loadDB();
+  db.reports[getReportKey(cls,name,topicId)]=data;
+  saveDB(db);
+}
+function deleteReport(cls,name,topicId){
+  const db=loadDB();
+  const key=getReportKey(cls,name,topicId);
+  if(db.reports[key]){
+    db.reports[key]={submitted:false,filename:null,date:null,fileData:null,grade:null,feedback:null};
+    saveDB(db);
+  }
+}
+
+// ============================================================
+// GOOGLE DRIVE CONFIG
+// ============================================================
+const DRIVE_KEY='transport_drive_url';
+const PRESET_DRIVE_URL='https://script.google.com/macros/s/AKfycbwtd5jHqW_O0QSpJ1MwDABdvO5URH8uONUHVOQrDNt-V_fS59_RIZ7PTg_8E3loTpBCtg/exec';
+function getDriveUrl(){return localStorage.getItem(DRIVE_KEY)||'';}
+function setDriveUrl(url){localStorage.setItem(DRIVE_KEY,url);}
+function hasDrive(){return !!getDriveUrl();}
+async function callDrive(payload){
+  const url=getDriveUrl();
+  if(!url)return null;
+  try{
+    const res=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+    return await res.json();
+  }catch(e){console.warn('Drive error:',e);return null;}
+}
+async function syncUploadToDrive(cls,name,topicId,topicName,filename,fileData){
+  if(!hasDrive())return;
+  toast('☁️ מסנכרן עם Drive...','');
+  const r=await callDrive({action:'uploadReport',cls,studentName:name,topicId,topicName,filename,fileData});
+  if(r&&r.ok)toast('☁️ נשמר ב-Drive ✅','success');
+}
+async function syncDeleteToDrive(cls,name,topicId,topicName){
+  if(!hasDrive())return;
+  await callDrive({action:'deleteReport',cls,studentName:name,topicId,topicName});
+}
+async function syncGradeToDrive(cls,name,topicId,grade,feedback){
+  if(!hasDrive())return;
+  await callDrive({action:'saveGrade',cls,studentName:name,topicId,grade,feedback});
+}
+// ============================================================
+// STATE
+// ============================================================
+let state={cls:'',name:'',currentTopicId:'',currentTopicName:'',adminFilterCls:'all',adminStudentFilter:'all',pwFilter:'ט',pendingFile:null,pendingFileData:null,gradeTarget:null};
+
+// ============================================================
+// INIT
+// ============================================================
+initDB();
+createSpeedLines();
+// Auto-set Drive URL if not yet configured
+if(!getDriveUrl())setDriveUrl(PRESET_DRIVE_URL);
+document.getElementById('graduateYear').textContent=new Date().getFullYear();
+
+function createSpeedLines(){
+  const c=document.getElementById('speedLines');
+  for(let i=0;i<8;i++){
+    const l=document.createElement('div');l.className='speed-line';
+    const top=20+Math.random()*60,w=100+Math.random()*200,dur=4+Math.random()*6,del=Math.random()*8;
+    l.style.cssText=`top:${top}%;width:${w}px;animation-duration:${dur}s;animation-delay:${del}s`;
+    c.appendChild(l);
+  }
+}
+
+// ============================================================
+// NAV
+// ============================================================
+function showPage(id){
+  document.getElementById('landing').style.display='none';
+  ['studentPage','adminPage'].forEach(p=>document.getElementById(p).className='page');
+  if(id==='landing'){document.getElementById('landing').style.display='flex';}
+  else{document.getElementById(id).className='page active';}
+}
+function goHome(){showPage('landing');}
+
+// ============================================================
+// OVERLAYS
+// ============================================================
+function openOverlay(id){document.getElementById(id).classList.add('active');}
+function closeOverlay(id){document.getElementById(id).classList.remove('active');}
+
+// ============================================================
+// LOGIN FLOW
+// ============================================================
+let pinEntered='';
+let loginStep=1;
+let resolvedStudent='';
+
+function openLoginModal(){
+  loginStep=1;pinEntered='';resolvedStudent='';
+  updateLoginSteps(1);
+  document.getElementById('loginClass').value='';
+  document.getElementById('loginFirst').value='';
+  document.getElementById('loginLast').value='';
+  resetPinDots();
+  openOverlay('loginModal');
+}
+function updateLoginSteps(n){
+  loginStep=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('loginStep'+i).style.display=i===n?'block':'none';
+    const el=document.getElementById('ls'+i);
+    if(i<n)el.className='step done';
+    else if(i===n)el.className='step active';
+    else el.className='step';
+  });
+}
+function loginStep2(){
+  const cls=document.getElementById('loginClass').value;
+  if(!cls){toast('❗ בחר כיתה','error');return;}
+  state.cls=cls;
+  updateLoginSteps(2);
+}
+// ---- Fuzzy matching helpers ----
+function normalize(s){return s.trim().toLowerCase().replace(/['"]/g,'');}
+
+// Levenshtein distance
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0));
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+// Score a student name against query tokens
+function matchScore(studentName, queryTokens){
+  const sTokens=normalize(studentName).split(/\s+/);
+  let totalScore=0;
+  for(const qt of queryTokens){
+    if(!qt)continue;
+    let best=999;
+    for(const st of sTokens){
+      // exact substring bonus
+      if(st.includes(qt)||qt.includes(st)){best=0;break;}
+      const d=levenshtein(qt,st);
+      // only allow distance up to 2 for short tokens, 3 for longer
+      const maxAllowed=qt.length<=3?1:qt.length<=5?2:3;
+      if(d<=maxAllowed&&d<best)best=d;
+    }
+    if(best===999)return 999; // token not found at all → reject
+    totalScore+=best;
+  }
+  return totalScore;
+}
+
+function findCandidates(cls, first, last){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const queryTokens=[normalize(first),normalize(last)].filter(Boolean);
+  if(queryTokens.length===0)return[];
+
+  const scored=students.map(s=>({name:s,score:matchScore(s,queryTokens)}))
+    .filter(x=>x.score<999)
+    .sort((a,b)=>a.score-b.score);
+
+  // Only return candidates with score <= 4 (reasonable fuzzy threshold)
+  return scored.filter(x=>x.score<=4).slice(0,3);
+}
+
+function loginStep3(){
+  const first=document.getElementById('loginFirst').value.trim();
+  const last=document.getElementById('loginLast').value.trim();
+  if(!first&&!last){toast('❗ הכנס לפחות שם אחד','error');return;}
+
+  const candidates=findCandidates(state.cls,first,last);
+
+  if(candidates.length===0){
+    toast('❗ לא נמצא תלמיד תואם בכיתה זו','error');
+    document.getElementById('loginFirst').style.borderColor='var(--red)';
+    document.getElementById('loginLast').style.borderColor='var(--red)';
+    setTimeout(()=>{
+      document.getElementById('loginFirst').style.borderColor='';
+      document.getElementById('loginLast').style.borderColor='';
+    },1500);
+    return;
+  }
+
+  // Show confirm screen
+  showConfirmScreen(candidates);
+}
+
+function showConfirmScreen(candidates){
+  const step2El=document.getElementById('loginStep2');
+  // Inject confirm UI inside step2
+  step2El.innerHTML=`
+    <div style="margin-bottom:16px;">
+      <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">
+        ${candidates.length===1?'האם זה אתה?':'נמצאו מספר תוצאות — בחר:'}
+      </div>
+      ${candidates.map((c,i)=>`
+        <button onclick="selectCandidate('${c.name.replace(/'/g,"\\'")}')"
+          style="width:100%;text-align:right;padding:14px 18px;background:var(--surface2);
+          border:1px solid var(--border);border-radius:var(--radius);color:var(--text);
+          font-family:'Heebo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;
+          margin-bottom:8px;transition:all .2s;display:flex;align-items:center;gap:10px;"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+          <span style="font-size:20px">👤</span>
+          <span>${c.name}</span>
+          ${c.score===0?'<span style="margin-right:auto;font-size:11px;color:var(--green);background:rgba(34,197,94,.1);padding:2px 8px;border-radius:20px;">התאמה מושלמת</span>':''}
+        </button>
+      `).join('')}
+      <button onclick="resetLoginStep2()"
+        style="width:100%;padding:10px;background:transparent;border:1px solid var(--border);
+        border-radius:var(--radius);color:var(--muted);font-family:'Heebo',sans-serif;
+        font-size:13px;cursor:pointer;margin-top:4px;">
+        ← חזור לחיפוש
+      </button>
+    </div>
+  `;
+}
+
+function selectCandidate(name){
+  resolvedStudent=name;
+  pinEntered='';
+  resetPinDots();
+  updateLoginSteps(3);
+}
+
+function resetLoginStep2(){
+  document.getElementById('loginStep2').innerHTML=`
+    <div class="form-group">
+      <label class="form-label">שם פרטי</label>
+      <input type="text" class="form-control" id="loginFirst" placeholder="הכנס שם פרטי">
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם משפחה</label>
+      <input type="text" class="form-control" id="loginLast" placeholder="הכנס שם משפחה">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="loginStep3()">המשך ←</button>
+  `;
+}
+function resetPinDots(){for(let i=0;i<5;i++)document.getElementById('pd'+i).className='pin-dot';}
+function pinPress(k){
+  if(k==='del'){pinEntered=pinEntered.slice(0,-1);}
+  else if(k==='ok'){checkStudentPin();return;}
+  else if(pinEntered.length<5){pinEntered+=k;}
+  updatePinDots();
+}
+function updatePinDots(){
+  for(let i=0;i<5;i++){
+    document.getElementById('pd'+i).className='pin-dot'+(i<pinEntered.length?' filled':'');
+  }
+}
+function checkStudentPin(){
+  if(pinEntered.length<1){toast('❗ הכנס סיסמה','error');return;}
+  const db=loadDB();
+  const students=db.students[state.cls]||[];
+  const idx=students.indexOf(resolvedStudent);
+  const customPws=db.customPasswords||{};
+  const pwKey=state.cls+'::'+resolvedStudent;
+  const correctPin=customPws[pwKey]||String(idx+1);
+  if(pinEntered===correctPin){
+    state.name=resolvedStudent;
+    closeOverlay('loginModal');
+    openStudentPage();
+  } else {
+    toast('❌ סיסמה שגויה','error');
+    pinEntered='';resetPinDots();
+  }
+}
+
+// ============================================================
+// STUDENT PAGE
+// ============================================================
+function openStudentPage(){
+  document.getElementById('studentNameDisplay').textContent=state.name;
+  document.getElementById('studentClassDisplay').textContent='כיתה '+state.cls+'\'  — מגמת תחבורה';
+  renderReports();
+  showPage('studentPage');
+}
+
+function renderReports(){
+  const topics=getTopicsForStudent(state.cls,state.name);
+  let submitted=0;
+  const list=document.getElementById('reportsList');
+  list.innerHTML='';
+
+  topics.forEach(topic=>{
+    const r=getReport(state.cls,state.name,topic.id);
+    if(r.submitted)submitted++;
+    const card=document.createElement('div');
+    const isFP=topic.isFinalProject||false;
+    card.className='report-card '+(r.submitted?'submitted':'missing');
+    if(isFP){card.style.cssText='border:2px solid var(--accent);background:linear-gradient(135deg,rgba(232,184,75,.08),var(--surface));';}
+
+    const canDeleteTopic=state.cls==='יב'&&!isFP;
+    // Get teacher photo for this topic
+    const db2=loadDB();
+    const tphoto=(db2.teacherPhotos||{})[state.cls+'::'+state.name+'::'+topic.id]||null;
+
+    // Final project meta display
+    let fpMeta='';
+    if(isFP){
+      fpMeta=`<div style="font-size:11px;color:var(--accent);margin-bottom:4px;">⭐ פרויקט גמר — עד 2 קבצים</div>`;
+      if(r.submitted)fpMeta+=`<div style="font-size:11px;color:var(--muted);">קובץ 1: ${r.filename} · ${r.date}</div>`;
+      if(r.file2)fpMeta+=`<div style="font-size:11px;color:var(--muted);">קובץ 2: ${r.filename2} · ${r.date2}</div>`;
+    }
+
+    card.innerHTML=`
+      <div class="status-dot ${r.submitted?'green':'red'}"></div>
+      <div class="report-info" style="flex:1">
+        <div class="report-name">${topic.name}</div>
+        ${isFP?fpMeta:`<div class="report-meta">${r.submitted?'✅ הוגש · '+r.filename+' · '+r.date:'🔴 טרם הוגש'}</div>`}
+        ${r.grade!=null?`<div class="report-grade">ציון: ${r.grade}${r.feedback?' — '+r.feedback:''}</div>`:''}
+        ${tphoto?`
+          <div style="margin-top:10px;background:rgba(232,184,75,.05);border:1px solid var(--border);border-radius:10px;padding:10px;">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">📸 תמונה מהמורה:</div>
+            <img src="${tphoto}" style="max-width:200px;max-height:120px;border-radius:8px;display:block;margin-bottom:8px;">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="action-btn download" onclick="downloadTeacherPhoto('${topic.id}')">⬇ הורד תמונה כ-PNG</button>
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.8;background:rgba(0,0,0,.2);border-radius:6px;padding:8px;">
+              📝 <b>הנחיות לכתיבת הדוח:</b><br>
+              גופן: David | גוף: 12 | כותרות: 16 מודגש<br>
+              <b>שם מלא:</b> _____ | <b>כיתה:</b> _____ | <b>מורה מלווה:</b> _____<br>
+              <b>תאריך:</b> _____ | <b>כלים שהשתמשת:</b> _____<br>
+              <b>תיאור העבודה:</b> _____ | הוסף תמונה בסוף
+            </div>
+          </div>
+        `:''}
+      </div>
+      <div class="report-actions">
+        ${!r.submitted?`<button class="action-btn upload" onclick="openFileModal('${topic.id}','${escHtml(topic.name)}','upload')">⬆ העלה</button>`:`
+          <button class="action-btn edit" onclick="openFileModal('${topic.id}','${escHtml(topic.name)}','edit')">✏ החלף קובץ 1</button>
+          <button class="action-btn download" onclick="downloadFile('${topic.id}')">⬇ קובץ 1</button>
+          <button class="action-btn del" onclick="removeReport('${topic.id}')">🗑</button>
+          ${isFP&&!r.file2?`<button class="action-btn upload" onclick="openFileModal('${topic.id}','${escHtml(topic.name)}','upload2')">⬆ הוסף קובץ 2</button>`:''}
+          ${isFP&&r.file2?`<button class="action-btn download" onclick="downloadFile2('${topic.id}')">⬇ קובץ 2</button><button class="action-btn del" onclick="removeFile2('${topic.id}')">🗑 קובץ 2</button>`:''}
+        `}
+        ${canDeleteTopic&&!r.submitted?`<button class="action-btn del" onclick="deleteTopicStudent('${topic.id}')">🗑 מחק נושא</button>`:''}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  document.getElementById('statTotal').textContent=topics.length;
+  document.getElementById('statSubmitted').textContent=submitted;
+  document.getElementById('statMissing').textContent=topics.length-submitted;
+}
+
+function escHtml(s){return s.replace(/'/g,"&#39;").replace(/"/g,"&quot;");}
+
+// ============================================================
+// FILE UPLOAD
+// ============================================================
+function openFileModal(topicId,topicName,mode){
+  if(isTopicLocked(state.cls,topicId)){toast('🔒 נושא זה נעול — לא ניתן להגיש','error');return;}
+  state.currentTopicId=topicId;state.currentTopicName=topicName;
+  state.pendingFile=null;state.pendingFileData=null;
+  const isFP=topicId.startsWith('final_project_');
+  if(mode==='upload2'){state.fpSlot=2;}
+  document.getElementById('fileModalTitle').textContent=(mode==='edit'?'✏ החלפת':'📤 העלאת')+(isFP?' פרויקט גמר':' דוח');
+  document.getElementById('fileModalSub').textContent=topicName+(isFP?' — ניתן להעלות עד 2 קבצים':'');
+  document.getElementById('fileBar').style.display='none';
+  document.getElementById('fileInput').value='';
+  // For final project show slot selector if already has file1
+  if(isFP){
+    const r=getReport(state.cls,state.name,topicId);
+    state.fpSlot=(r.submitted&&!r.file2)?2:1; // if file1 exists, upload to slot2
+  } else {state.fpSlot=1;}
+  openOverlay('fileModal');
+}
+function onFileSelected(input){
+  const file=input.files[0];
+  if(!file)return;
+  const ext='.'+file.name.split('.').pop().toLowerCase();
+  if(!['.docx','.pptx','.pdf'].includes(ext)){toast('❗ סוג קובץ לא מורשה','error');return;}
+  state.pendingFile=file;
+  const reader=new FileReader();
+  reader.onload=e=>{state.pendingFileData=e.target.result;};
+  reader.readAsDataURL(file);
+  document.getElementById('fileBar').style.display='flex';
+  document.getElementById('fileBarName').textContent=file.name;
+}
+function confirmUpload(){
+  if(!state.pendingFile){toast('❗ בחר קובץ תחילה','error');return;}
+  const existing=getReport(state.cls,state.name,state.currentTopicId);
+  const isFP=state.currentTopicId.startsWith('final_project_');
+  let r;
+  if(isFP&&state.fpSlot===2&&existing.submitted){
+    // add second file
+    r={...existing,file2:state.pendingFileData,filename2:state.pendingFile.name,date2:new Date().toLocaleDateString('he-IL')};
+  } else {
+    r={submitted:true,filename:state.pendingFile.name,date:new Date().toLocaleDateString('he-IL'),fileData:state.pendingFileData,grade:existing.grade||null,feedback:existing.feedback||null};
+    if(isFP&&existing.file2){r.file2=existing.file2;r.filename2=existing.filename2;r.date2=existing.date2;}
+  }
+  setReport(state.cls,state.name,state.currentTopicId,r);
+  closeOverlay('fileModal');
+  renderReports();
+  toast('✅ '+(isFP?'פרויקט הגמר':'הדוח')+' הועלה בהצלחה!','success');
+  addLog('⬆ העלאה',state.name+' העלה דוח: '+state.currentTopicName);
+  syncUploadToDrive(state.cls,state.name,state.currentTopicId,state.currentTopicName,state.pendingFile.name,state.pendingFileData);
+}
+function downloadFile2(topicId){
+  const r=getReport(state.cls,state.name,topicId);
+  if(!r.file2){toast('❗ אין קובץ שני','error');return;}
+  const a=document.createElement('a');a.href=r.file2;a.download=r.filename2;a.click();
+}
+function removeFile2(topicId){
+  if(!confirm('למחוק קובץ 2?'))return;
+  const r=getReport(state.cls,state.name,topicId);
+  const updated={...r};
+  delete updated.file2;delete updated.filename2;delete updated.date2;
+  setReport(state.cls,state.name,topicId,updated);
+  renderReports();
+  toast('🗑 קובץ 2 נמחק');
+}
+function downloadTeacherPhoto(topicId){
+  const db=loadDB();
+  const photo=(db.teacherPhotos||{})[state.cls+'::'+state.name+'::'+topicId];
+  if(!photo){toast('❗ אין תמונה','error');return;}
+  const a=document.createElement('a');
+  a.href=photo;
+  a.download='תמונת_מעבדה_'+topicId+'.png';
+  a.click();
+}
+function removeReport(topicId){
+  if(!confirm('למחוק הגשה זו?'))return;
+  const tname=(getTopicsForStudent(state.cls,state.name).find(t=>t.id===topicId)||{}).name||'';
+  deleteReport(state.cls,state.name,topicId);
+  renderReports();
+  toast('🗑 ההגשה נמחקה');
+  syncDeleteToDrive(state.cls,state.name,topicId,tname);
+}
+function deleteTopicStudent(topicId){
+  if(!confirm('למחוק נושא זה לחלוטין?'))return;
+  const db=loadDB();
+  const p=db.personalTopics||{};
+  const topics=getTopicsForStudent(state.cls,state.name);
+  const t=topics.find(x=>x.id===topicId);
+  if(t&&p[state.name]){
+    p[state.name]=p[state.name].filter(n=>n!==t.name);
+    db.personalTopics=p;
+    saveDB(db);
+  }
+  renderReports();
+  toast('🗑 הנושא נמחק');
+}
+function downloadFile(topicId){
+  const r=getReport(state.cls,state.name,topicId);
+  if(!r.fileData){toast('❗ אין קובץ להורדה','error');return;}
+  const a=document.createElement('a');
+  a.href=r.fileData;a.download=r.filename;a.click();
+}
+
+// ============================================================
+// DRAG & DROP
+// ============================================================
+const uploadZone=document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('dragover');});
+uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop',e=>{
+  e.preventDefault();uploadZone.classList.remove('dragover');
+  const file=e.dataTransfer.files[0];
+  if(file){const dt=new DataTransfer();dt.items.add(file);document.getElementById('fileInput').files=dt.files;onFileSelected(document.getElementById('fileInput'));}
+});
+
+// ============================================================
+// ADMIN
+// ============================================================
+function openAdminPin(){
+  document.getElementById('adminPinInput').value='';
+  openOverlay('adminPinModal');
+  setTimeout(()=>document.getElementById('adminPinInput').focus(),300);
+}
+function checkAdminPin(){
+  const val=document.getElementById('adminPinInput').value;
+  if(val===ADMIN_PIN){closeOverlay('adminPinModal');openAdminPage();}
+  else{toast('❌ קוד שגוי','error');}
+}
+document.getElementById('adminPinInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkAdminPin();});
+
+function openAdminPage(){
+  // Show undo button if backup exists
+  const db=loadDB();
+  const undoBtn=document.getElementById('undoPromoteBtn');
+  if(undoBtn){
+    if(db.promoteBackup){
+      const ago=Math.round((Date.now()-db.promoteBackup.ts)/60000);
+      undoBtn.style.display='inline-flex';
+      undoBtn.textContent="↩ בטל קידום (לפני "+ago+" דקות)";
+    } else {
+      undoBtn.style.display='none';
+    }
+  }
+  renderAdminStatus('all');
+  buildAdminFilters();
+  renderTopicsList();
+  renderStudentListAdmin('ט');
+  renderPasswordList('ט');
+  renderAlumni();
+  showPage('adminPage');
+}
+
+function initDriveTab(){
+  const url=getDriveUrl();
+  document.getElementById('driveUrlInput').value=url||'';
+  const status=document.getElementById('driveStatus');
+  if(url){status.innerHTML='<span style="color:var(--green)">✅ Drive מחובר</span>';}
+  else{status.innerHTML='<span style="color:var(--red)">❌ Drive לא מחובר — עקוב אחר ההוראות למטה</span>';}
+}
+function saveDriveUrl(){
+  const url=document.getElementById('driveUrlInput').value.trim();
+  if(!url||!url.includes('script.google.com')){toast('❗ URL לא תקין','error');return;}
+  setDriveUrl(url);
+  initDriveTab();
+  toast('✅ URL נשמר!','success');
+}
+async function testDriveUrl(){
+  const url=document.getElementById('driveUrlInput').value.trim();
+  if(!url){toast('❗ הכנס URL תחילה','error');return;}
+  toast('🔗 בודק חיבור...','');
+  try{
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d.ok)toast('✅ החיבור תקין! Drive מוכן','success');
+    else toast('⚠️ Drive מגיב אבל החזיר שגיאה','error');
+  }catch(e){toast('❌ לא ניתן להתחבר — בדוק את ה-URL','error');}
+}
+function clearDriveUrl(){
+  if(!confirm('לנתק את Drive?'))return;
+  localStorage.removeItem(DRIVE_KEY);
+  initDriveTab();
+  toast('🔌 Drive נותק');
+}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    const tabs=['status','topics','students','passwords','promote','drive','syllabus','grades','alerts','message','stats','log','backup'];
+    b.className='tab-btn'+(tabs[i]===name?' active':'');
+  });
+  document.querySelectorAll('.tab-content').forEach(c=>c.className='tab-content');
+  document.getElementById('tab-'+name).className='tab-content active';
+}
+
+// --- STATUS TAB ---
+function buildAdminFilters(){
+  const f=document.getElementById('adminClassFilter');
+  f.innerHTML='';
+  ['all','ט','י','יא','יב'].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(state.adminFilterCls===c?' active':'');
+    b.textContent=c==='all'?'כל הכיתות':'כיתה '+c+'\'';
+    b.onclick=()=>{state.adminFilterCls=c;buildAdminFilters();renderAdminStatus(c);};
+    f.appendChild(b);
+  });
+}
+
+function renderAdminStatus(filterCls){
+  const db=loadDB();
+  const classes=filterCls==='all'?['ט','י','יא','יב']:[filterCls];
+
+  // Build unique topics per class
+  const thead=document.getElementById('adminTableHead');
+  thead.innerHTML='<th>שם</th><th>כיתה</th>';
+
+  // For mixed view we show submitted count
+  if(filterCls==='all'||filterCls==='יב'){
+    // no per-topic columns for yud-bet personal — show aggregate
+  }
+
+  // Find all topic columns for selected classes (excluding yb personal for simplicity in mixed view)
+  let sharedTopics=[];
+  if(filterCls!=='all'&&filterCls!=='יב'){
+    sharedTopics=(db.topics[filterCls]||[]);
+    sharedTopics.forEach(t=>{
+      const th=document.createElement('th');th.textContent=t.name.split('—')[0].trim()+' '+(t.name.includes('—')?t.name.split('—')[1].trim():'');th.title=t.name;thead.appendChild(th);
+    });
+    ['ציון','הורד'].forEach(h=>{const th=document.createElement('th');th.textContent=h;thead.appendChild(th);});
+  } else {
+    ['הוגשו','חסרים','ציון ממוצע'].forEach(h=>{const th=document.createElement('th');th.textContent=h;thead.appendChild(th);});
+  }
+
+  const tbody=document.getElementById('adminTableBody');tbody.innerHTML='';
+
+  classes.forEach(cls=>{
+    (db.students[cls]||[]).forEach(sname=>{
+      const topics=getTopicsForStudent(cls,sname);
+      const reports=topics.map(t=>getReport(cls,sname,t.id));
+      const subCount=reports.filter(r=>r.submitted).length;
+      const grades=reports.filter(r=>r.grade!=null).map(r=>r.grade);
+      const avgGrade=grades.length?Math.round(grades.reduce((a,b)=>a+b,0)/grades.length):null;
+
+      const tr=document.createElement('tr');
+      if(filterCls!=='all'&&filterCls!=='יב'){
+        tr.innerHTML=`<td><span style="cursor:pointer;color:var(--accent);text-decoration:underline" onclick="openAdminStudentView('${cls}','${sname.replace(/'/g,"\'")}')">${sname}</span></td><td>${cls}′</td>`;
+        sharedTopics.forEach(t=>{
+          const r=getReport(cls,sname,t.id);
+          tr.innerHTML+=`<td>
+            <span class="badge ${r.submitted?'green':'red'}">${r.submitted?'✅':'❌'}</span>
+          </td>`;
+        });
+        // grade + download cell combined
+        const gradeCell=document.createElement('td');
+        gradeCell.innerHTML=`<input class="grade-input" type="number" min="0" max="100" placeholder="—" value="${''}" oninput="adminGradeChange(this,'${cls}','${sname}','all','${filterCls}')">`;
+        tr.appendChild(gradeCell);
+        const dlCell=document.createElement('td');
+        reports.forEach((r,i)=>{
+          if(r.submitted&&r.fileData){
+            const b=document.createElement('button');
+            b.className='action-btn download';b.style.marginBottom='2px';
+            b.textContent='⬇ '+topics[i].name.split('—').pop().trim().substring(0,12);
+            b.onclick=()=>adminDownload(r);dlCell.appendChild(b);
+          }
+        });
+        tr.appendChild(dlCell);
+      } else {
+        tr.innerHTML=`
+          <td><span style="cursor:pointer;color:var(--accent);text-decoration:underline" onclick="openAdminStudentView('${cls}','${sname.replace(/'/g,"\'")}')">${sname}</span></td><td>${cls}′</td>
+          <td><span class="badge green">${subCount}</span></td>
+          <td><span class="badge ${subCount<topics.length?'red':'green'}">${topics.length-subCount}</span></td>
+          <td>${avgGrade!=null?`<span class="badge gold">${avgGrade}</span>`:'—'}</td>
+        `;
+      }
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function adminGradeChange(input,cls,name,topicId,filterCls){
+  // For simplicity when all topics — skip; handle per topic in grade modal
+}
+
+function adminDownload(r){
+  if(!r.fileData)return;
+  const a=document.createElement('a');a.href=r.fileData;a.download=r.filename;a.click();
+}
+
+// Grade modal from admin (click on student name in status)
+// Name click handled via onclick on the span in each td
+
+function openGradeModal(cls,name,topicId,topicName){
+  state.gradeTarget={cls,name,topicId,topicName};
+  document.getElementById('gradeModalTitle').textContent=(topicName||name)+' — '+(topicId?'':cls+'\'');
+  document.getElementById('gradeInput').value='';
+  document.getElementById('feedbackInput').value='';
+  openOverlay('gradeModal');
+}
+function saveGrade(){
+  const g=parseInt(document.getElementById('gradeInput').value);
+  const fb=document.getElementById('feedbackInput').value.trim();
+  if(isNaN(g)||g<0||g>100){toast('❗ ציון לא תקין','error');return;}
+  const {cls,name,topicId}=state.gradeTarget;
+  const db=loadDB();
+  // apply grade to all submitted reports for this student if no specific topic
+  const topics=getTopicsForStudent(cls,name);
+  topics.forEach(t=>{
+    const r=getReport(cls,name,t.id);
+    if(r.submitted){r.grade=g;r.feedback=fb;setReport(cls,name,t.id,r);}
+  });
+  closeOverlay('gradeModal');
+  renderAdminStatus(state.adminFilterCls);
+  toast('✅ הציון נשמר','success');
+  addLog('⭐ ציון','ניתן ציון '+g+' ל'+name);
+  const topicsG=getTopicsForStudent(cls,name);
+  topicsG.forEach(t=>{const r=getReport(cls,name,t.id);if(r.submitted)syncGradeToDrive(cls,name,t.id,g,fb);});
+}
+
+// --- TOPICS TAB ---
+function toggleYibTopics(id){
+  const el=document.getElementById(id);
+  const arr=document.getElementById('arr_'+id);
+  if(!el)return;
+  const open=el.style.display==='block';
+  el.style.display=open?'none':'block';
+  if(arr)arr.textContent=open?'▼':'▲';
+}
+
+function adminDeleteStudentReport(cls,name,topicId){
+  if(!confirm('למחוק את ההגשה של '+name+' לנושא זה?'))return;
+  const db=loadDB();
+  const key=cls+'::'+name+'::'+topicId;
+  if(db.reports&&db.reports[key]){
+    db.reports[key]={submitted:false,filename:null,date:null,fileData:null,grade:null,feedback:null};
+    saveDB(db);
+  }
+  renderTopicsList();
+  toast('🗑 ההגשה נמחקה');
+}
+
+function renderTopicsList(){
+  const db=loadDB();
+  const list=document.getElementById('topicsList');
+  list.innerHTML='';
+  ['ט','י','יא','יב'].forEach(cls=>{
+    const div=document.createElement('div');div.style.marginBottom='20px';
+    div.innerHTML=`<div style="font-weight:700;color:var(--accent);margin-bottom:10px;font-size:14px;">כיתה ${cls}′</div>`;
+    const topics=cls==='יב'?[]:db.topics[cls]||[];
+    if(cls==='יב'){
+      const yibStudents=db.students['יב']||[];
+      if(yibStudents.length===0){
+        div.innerHTML+='<div style="font-size:12px;color:var(--muted)">אין תלמידים בכיתה י״ב</div>';
+      } else {
+        // Per-student topic status table for יב
+        div.innerHTML+=`
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">
+            לחץ על תלמיד לפתיחת הפרופיל שלו | לחץ על נושא לראות פרטי הגשה
+          </div>`;
+        yibStudents.forEach(sname=>{
+          const sTopics=getTopicsForStudent('יב',sname);
+          const submitted=sTopics.filter(t=>getReport('יב',sname,t.id).submitted).length;
+          const total=sTopics.length;
+          const pct=total>0?Math.round(submitted/total*100):0;
+          const color=pct===100?'var(--green)':pct>50?'var(--accent)':'var(--red)';
+
+          const studentDiv=document.createElement('div');
+          studentDiv.style.cssText='background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;';
+          studentDiv.innerHTML=`
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);"
+              onclick="toggleYibTopics('yib_${sname.replace(/[^a-z0-9]/gi,'_')}')">
+              <span style="flex:1;font-weight:700;font-size:14px;">${sname}</span>
+              <span style="font-size:12px;color:var(--muted);">${submitted}/${total} הוגשו</span>
+              <div style="width:80px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">
+                <div style="height:100%;width:${pct}%;background:${color};transition:width .3s;"></div>
+              </div>
+              <button class="action-btn edit" style="padding:4px 10px;font-size:11px;"
+                onclick="event.stopPropagation();openAdminStudentView('יב','${sname.replace(/'/g,"\'")}')">
+                👤 פרופיל
+              </button>
+              <span style="color:var(--muted);font-size:12px;" id="arr_yib_${sname.replace(/[^a-z0-9]/gi,'_')}">▼</span>
+            </div>
+            <div id="yib_${sname.replace(/[^a-z0-9]/gi,'_')}" style="display:none;padding:10px 16px;">
+              ${sTopics.map(t=>{
+                const r=getReport('יב',sname,t.id);
+                return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+                  <span class="status-dot ${r.submitted?'green':'red'}" style="flex-shrink:0;"></span>
+                  <span style="flex:1;font-size:13px;${t.isFinalProject?'font-weight:700;color:var(--accent);':''}">${t.name}</span>
+                  <span style="font-size:11px;color:var(--muted);">${r.submitted?r.filename+' · '+r.date:'טרם הוגש'}</span>
+                  ${r.submitted?`<button class="action-btn download" style="padding:3px 8px;font-size:11px;" onclick="adminDownloadByKey('יב','${sname.replace(/'/g,"\'")}','${t.id}')">⬇</button>`:''}
+                  ${r.grade!=null?`<span class="badge gold" style="font-size:11px;">${r.grade}</span>`:''}
+                  <button class="action-btn del" style="padding:3px 8px;font-size:11px;"
+                    onclick="adminDeleteStudentReport('יב','${sname.replace(/'/g,"\'")}','${t.id}')">🗑</button>
+                </div>`;
+              }).join('')}
+            </div>
+          `;
+          div.appendChild(studentDiv);
+        });
+      }
+    }
+    else if(topics.length===0){div.innerHTML+='<div style="font-size:12px;color:var(--muted)">אין נושאים</div>';}
+    else{
+      topics.forEach(t=>{
+        const row=document.createElement('div');row.className='topic-row';
+        const locked=isTopicLocked(cls,t.id);
+        row.innerHTML=`<div class="topic-name">${t.name}${locked?' <span style="color:var(--red);font-size:11px;">🔒 נעול</span>':''}</div>
+          <button class="action-btn btn-sm" style="${locked?'color:var(--green)':'color:var(--muted)'}" onclick="toggleTopicLock('${cls}','${t.id}','${t.name.replace(/'/g,"\'")}')">${locked?'🔓 פתח':'🔒 נעל'}</button>
+          <button class="action-btn del btn-sm" onclick="removeTopic('${cls}','${t.id}')">🗑</button>`;
+        div.appendChild(row);
+      });
+    }
+    list.appendChild(div);
+  });
+}
+function addTopic(){
+  const cls=document.getElementById('newTopicClass').value;
+  const name=document.getElementById('newTopicName').value.trim();
+  if(!name){toast('❗ הכנס שם נושא','error');return;}
+  if(cls==='יב'){toast('❗ כיתה י״ב — נושאים אישיים, ערוך בלשונית תלמידים','error');return;}
+  const db=loadDB();
+  db.topics[cls]=db.topics[cls]||[];
+  db.topics[cls].push({id:'t_'+Date.now(),name});
+  saveDB(db);
+  document.getElementById('newTopicName').value='';
+  renderTopicsList();
+  toast('✅ הנושא נוסף','success');
+}
+function removeTopic(cls,id){
+  if(!confirm('למחוק נושא זה?'))return;
+  const db=loadDB();
+  db.topics[cls]=(db.topics[cls]||[]).filter(t=>t.id!==id);
+  saveDB(db);
+  renderTopicsList();
+  toast('🗑 הנושא נמחק');
+}
+
+// --- STUDENTS TAB ---
+function buildStudentFilter2(){
+  const f=document.getElementById('studentClassFilter2');f.innerHTML='';
+  ['ט','י','יא','יב'].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(state.adminStudentFilter===c?' active':'');
+    b.textContent='כיתה '+c+'\'';
+    b.onclick=()=>{state.adminStudentFilter=c;buildStudentFilter2();renderStudentListAdmin(c);};
+    f.appendChild(b);
+  });
+}
+buildStudentFilter2();
+
+function renderStudentListAdmin(cls){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const div=document.getElementById('studentListAdmin');div.innerHTML='';
+  if(students.length===0){div.innerHTML='<div style="color:var(--muted);font-size:13px;">אין תלמידים בכיתה זו</div>';return;}
+  students.forEach((s,i)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;font-size:13px;';
+    row.innerHTML=`<span>${i+1}. ${s}</span>
+      <span style="display:flex;gap:6px;align-items:center;">
+        <span class="badge gold">סיסמה: ${getStudentPassword(cls,i)}</span>
+        <button class="action-btn del" onclick="removeStudent('${cls}','${s}')">🗑</button>
+      </span>`;
+    div.appendChild(row);
+  });
+}
+function removeStudent(cls,name){
+  if(!confirm('למחוק תלמיד '+name+'?'))return;
+  const db=loadDB();
+  db.students[cls]=(db.students[cls]||[]).filter(s=>s!==name);
+  saveDB(db);
+  renderStudentListAdmin(cls);
+  toast('🗑 התלמיד נמחק');
+}
+function addStudents(){
+  const cls=document.getElementById('addStudentClass').value;
+  const raw=document.getElementById('newStudentNames').value.trim();
+  if(!raw){toast('❗ הכנס שמות','error');return;}
+  const names=raw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const db=loadDB();
+  db.students[cls]=db.students[cls]||[];
+  const added=[];
+  names.forEach(n=>{
+    if(n&&!db.students[cls].includes(n)){
+      db.students[cls].push(n);
+      added.push(n);
+    }
+  });
+  // New students automatically get empty report slots for all class topics
+  // (topics are fetched dynamically from db.topics[cls] so nothing extra needed)
+  // But for יב personal topics — init empty list so student appears
+  if(cls==='יב'){
+    db.personalTopics=db.personalTopics||{};
+    added.forEach(n=>{
+      if(!db.personalTopics[n])db.personalTopics[n]=[];
+    });
+  }
+  saveDB(db);
+  document.getElementById('newStudentNames').value='';
+  renderStudentListAdmin(cls);
+  buildStudentFilter2();
+  toast('✅ '+added.length+' תלמידים נוספו לכיתה '+cls+"' — כל הדוחות יופיעו להם אוטומטית",'success');
+}
+
+// --- PASSWORDS TAB ---
+function buildPwFilter(){
+  const f=document.getElementById('pwClassFilter');f.innerHTML='';
+  ['ט','י','יא','יב'].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(state.pwFilter===c?' active':'');
+    b.textContent='כיתה '+c+'\'';
+    b.onclick=()=>{state.pwFilter=c;buildPwFilter();renderPasswordList(c);};
+    f.appendChild(b);
+  });
+}
+buildPwFilter();
+
+function renderPasswordList(cls){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const div=document.getElementById('pwList');div.innerHTML='';
+  if(students.length===0){div.innerHTML='<div style="color:var(--muted);font-size:13px;">אין תלמידים</div>';return;}
+  const card=document.createElement('div');
+  card.style.cssText='background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;';
+  card.innerHTML=`<div style="font-weight:700;margin-bottom:12px;color:var(--accent);">כיתה ${cls}′ — סיסמאות</div>`;
+  const list=document.createElement('div');list.className='password-list';
+  students.forEach((s,i)=>{
+    const row=document.createElement('div');row.className='pw-row';
+    row.innerHTML=`<span class="pw-name">${i+1}. ${s}</span><span class="pw-badge">${getStudentPassword(cls,i)}</span>`;
+    list.appendChild(row);
+  });
+  card.appendChild(list);div.appendChild(card);
+}
+
+// --- PROMOTE TAB ---
+function promoteClasses(){
+  if(!confirm('⚠ לבצע קידום שכבות?\nהדוחות יעברו עם התלמידים.\nניתן לבטל לאחר מכן אם נדרש.'))return;
+  const db=loadDB();
+  const year=new Date().getFullYear();
+  // Save full backup for undo
+  db.promoteBackup={
+    students:JSON.parse(JSON.stringify(db.students)),
+    topics:JSON.parse(JSON.stringify(db.topics)),
+    reports:JSON.parse(JSON.stringify(db.reports||{})),
+    teacherPhotos:JSON.parse(JSON.stringify(db.teacherPhotos||{})),
+    personalTopics:JSON.parse(JSON.stringify(db.personalTopics||{})),
+    year,
+    ts:Date.now()
+  };
+
+  // Archive יב — save students + their reports
+  db.alumni=db.alumni||{};
+  const yibStudents=db.students['יב']||[];
+  const yibArchive={students:JSON.parse(JSON.stringify(yibStudents)),reports:{}};
+  // Copy all יב reports to archive
+  Object.keys(db.reports||{}).forEach(key=>{
+    if(key.startsWith('יב::'))yibArchive.reports[key]=db.reports[key];
+  });
+  db.alumni['מסיימי '+year]=yibArchive;
+
+  // Promote students
+  const oldStudents=JSON.parse(JSON.stringify(db.students));
+  db.students['יב']=oldStudents['יא']||[];
+  db.students['יא']=oldStudents['י']||[];
+  db.students['י']=oldStudents['ט']||[];
+  db.students['ט']=[];
+
+  // Promote reports — move with students (change key prefix)
+  const oldReports=JSON.parse(JSON.stringify(db.reports||{}));
+  // Remove old promoted reports from db
+  Object.keys(oldReports).forEach(key=>{
+    if(key.startsWith('יא::')||key.startsWith('י::')||key.startsWith('ט::'))
+      delete db.reports[key];
+  });
+  // Re-add with new class prefix
+  Object.keys(oldReports).forEach(key=>{
+    if(key.startsWith('יא::'))db.reports['יב::'+key.slice('יא::'.length)]=oldReports[key];
+    else if(key.startsWith('י::'))db.reports['יא::'+key.slice('י::'.length)]=oldReports[key];
+    else if(key.startsWith('ט::'))db.reports['י::'+key.slice('ט::'.length)]=oldReports[key];
+  });
+
+  // Promote topics
+  const oldTopics=JSON.parse(JSON.stringify(db.topics));
+  db.topics['יב']=oldTopics['יא']||[];
+  db.topics['יא']=oldTopics['י']||[];
+  db.topics['י']=oldTopics['ט']||[];
+  db.topics['ט']=[];
+
+  // Promote teacher photos too
+  const oldPhotos=JSON.parse(JSON.stringify(db.teacherPhotos||{}));
+  Object.keys(oldPhotos).forEach(key=>{
+    if(key.startsWith('יא::'))db.teacherPhotos['יב::'+key.slice('יא::'.length)]=oldPhotos[key];
+    else if(key.startsWith('י::'))db.teacherPhotos['יא::'+key.slice('י::'.length)]=oldPhotos[key];
+    else if(key.startsWith('ט::'))db.teacherPhotos['י::'+key.slice('ט::'.length)]=oldPhotos[key];
+  });
+
+  saveDB(db);
+  renderAlumni();
+  renderStudentListAdmin('ט');
+  toast('✅ הקידום בוצע! י"ב הפכו למסיימי '+year+'. כל הדוחות עברו עם התלמידים','success');
+  addLog('🎓 קידום','שכבות קודמו. י"ב → מסיימי '+year);
+}
+function undoPromote(){
+  const db=loadDB();
+  if(!db.promoteBackup){toast('❗ אין גיבוי לביטול','error');return;}
+  const backup=db.promoteBackup;
+  const ago=Math.round((Date.now()-backup.ts)/60000);
+  if(!confirm('לבטל את הקידום שבוצע לפני '+ago+' דקות?\nהמצב יחזור למה שהיה לפני הקידום.'))return;
+  db.students=backup.students;
+  db.topics=backup.topics;
+  db.reports=backup.reports;
+  db.teacherPhotos=backup.teacherPhotos;
+  db.personalTopics=backup.personalTopics;
+  // Remove the alumni entry that was just added
+  const alumniKey='מסיימי '+backup.year;
+  if(db.alumni&&db.alumni[alumniKey])delete db.alumni[alumniKey];
+  delete db.promoteBackup;
+  saveDB(db);
+  renderAlumni();
+  renderStudentListAdmin('ט');
+  toast('↩ הקידום בוטל — המצב חזר לקדמותו','success');
+}
+
+function renderAlumni(){
+  const db=loadDB();
+  const alumni=db.alumni||{};
+  const div=document.getElementById('alumniList');div.innerHTML='';
+  const keys=Object.keys(alumni);
+  if(keys.length===0){div.innerHTML='<div style="color:var(--muted);font-size:13px;">אין ארכיון עדיין</div>';return;}
+  keys.forEach(year=>{
+    const card=document.createElement('div');
+    card.style.cssText='background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;';
+    card.innerHTML=`<div style="font-weight:700;margin-bottom:8px;color:var(--accent);">🎓 ${year}</div>
+      ${alumni[year].map(s=>`<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">${s}</div>`).join('')}`;
+    div.appendChild(card);
+  });
+}
+
+// ============================================================
+// GRADES (הערכת תלמידים)
+// ============================================================
+let gradesFilterCls='ט';
+
+function buildGradesClassFilter(){
+  const f=document.getElementById('gradesClassFilter');
+  if(!f)return;
+  f.innerHTML='';
+  ['ט','י','יא','יב'].forEach(cls=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(gradesFilterCls===cls?' active':'');
+    b.textContent='כיתה '+cls+"'";
+    b.onclick=()=>{gradesFilterCls=cls;buildGradesClassFilter();renderGradesTable(cls);};
+    f.appendChild(b);
+  });
+}
+
+function calcReportGrade(cls, name){
+  const topics=getTopicsForStudent(cls,name);
+  const graded=topics.map(t=>getReport(cls,name,t.id)).filter(r=>r.grade!=null);
+  if(graded.length===0)return null;
+  return Math.round(graded.reduce((s,r)=>s+r.grade,0)/graded.length);
+}
+
+function calcFinalGrade(reportGrade, behavior, attendance){
+  if(reportGrade==null&&behavior==null&&attendance==null)return null;
+  const r=reportGrade||0, b=behavior||0, a=attendance||0;
+  return Math.round(r*0.6 + b*0.2 + a*0.2);
+}
+
+function getExtraGrades(cls, name){
+  const db=loadDB();
+  return (db.extraGrades||{})[cls+'::'+name]||{behavior:null,attendance:null};
+}
+function setExtraGrades(cls, name, behavior, attendance){
+  const db=loadDB();
+  if(!db.extraGrades)db.extraGrades={};
+  db.extraGrades[cls+'::'+name]={behavior,attendance};
+  saveDB(db);
+}
+
+function renderGradesTable(cls){
+  const db=loadDB();
+  const students=db.students[cls]||[];
+  const tbody=document.getElementById('gradesTableBody');
+  tbody.innerHTML='';
+
+  students.forEach(name=>{
+    const reportGrade=calcReportGrade(cls,name);
+    const extra=getExtraGrades(cls,name);
+    const finalGrade=calcFinalGrade(reportGrade,extra.behavior,extra.attendance);
+
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>
+        <span style="cursor:pointer;color:var(--accent);font-weight:600;"
+          onclick="openAdminStudentView('${cls}','${name.replace(/'/g,"\'")}')">
+          ${name}
+        </span>
+      </td>
+      <td>
+        ${reportGrade!=null
+          ? `<span class="badge ${reportGrade>=60?'green':'red'}">${reportGrade}</span>`
+          : '<span style="color:var(--muted);font-size:12px;">אין ציונים</span>'}
+      </td>
+      <td>
+        <input class="grade-input" type="number" min="0" max="100"
+          value="${extra.behavior!=null?extra.behavior:''}"
+          placeholder="—"
+          onchange="saveExtraGrade('${cls}','${name.replace(/'/g,"\'")}','behavior',this.value)"
+          style="width:60px;">
+      </td>
+      <td>
+        <input class="grade-input" type="number" min="0" max="100"
+          value="${extra.attendance!=null?extra.attendance:''}"
+          placeholder="—"
+          onchange="saveExtraGrade('${cls}','${name.replace(/'/g,"\'")}','attendance',this.value)"
+          style="width:60px;">
+      </td>
+      <td>
+        ${finalGrade!=null
+          ? `<span class="badge ${finalGrade>=60?'gold':'red'}" style="font-size:14px;font-weight:900;">${finalGrade}</span>`
+          : '—'}
+      </td>
+      <td>
+        <button class="action-btn edit" onclick="openGradeBreakdown('${cls}','${name.replace(/'/g,"\'")}')">
+          📋 פירוט
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function saveExtraGrade(cls, name, field, val){
+  const existing=getExtraGrades(cls,name);
+  const parsed=val===''?null:Math.min(100,Math.max(0,parseInt(val)));
+  if(field==='behavior')setExtraGrades(cls,name,parsed,existing.attendance);
+  else setExtraGrades(cls,name,existing.behavior,parsed);
+  // re-render just that row's final grade
+  renderGradesTable(cls);
+}
+
+function openGradeBreakdown(cls, name){
+  const topics=getTopicsForStudent(cls,name);
+  const extra=getExtraGrades(cls,name);
+  const reportGrade=calcReportGrade(cls,name);
+  const finalGrade=calcFinalGrade(reportGrade,extra.behavior,extra.attendance);
+
+  let rows=topics.map(t=>{
+    const r=getReport(cls,name,t.id);
+    return `<tr>
+      <td style="font-size:12px;">${t.name}</td>
+      <td style="text-align:center;">
+        ${r.submitted?'✅':'❌'}
+      </td>
+      <td style="text-align:center;">
+        <input class="grade-input" type="number" min="0" max="100"
+          value="${r.grade!=null?r.grade:''}" placeholder="—"
+          onchange="adminSetTopicGrade('${cls}','${name.replace(/'/g,"\'")}','${t.id}',this.value)"
+          style="width:55px;">
+      </td>
+    </tr>`;
+  }).join('');
+
+  const modal=document.createElement('div');
+  modal.className='overlay active';
+  modal.id='breakdownModal';
+  modal.innerHTML=`
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-title">📋 פירוט ציונים — ${name}</div>
+        <button class="modal-close" onclick="document.getElementById('breakdownModal').remove()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+          <div class="stat-card" style="flex:1;">
+            <div class="stat-num green">${reportGrade!=null?reportGrade:'—'}</div>
+            <div class="stat-label">ממוצע דוחות (60%)</div>
+          </div>
+          <div class="stat-card" style="flex:1;">
+            <div class="stat-num" style="color:var(--purple)">${extra.behavior!=null?extra.behavior:'—'}</div>
+            <div class="stat-label">התנהלות (20%)</div>
+          </div>
+          <div class="stat-card" style="flex:1;">
+            <div class="stat-num" style="color:var(--blue)">${extra.attendance!=null?extra.attendance:'—'}</div>
+            <div class="stat-label">נוכחות (20%)</div>
+          </div>
+          <div class="stat-card" style="flex:1;border-color:var(--accent);">
+            <div class="stat-num gold">${finalGrade!=null?finalGrade:'—'}</div>
+            <div class="stat-label">ציון סופי</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>נושא</th><th>הוגש</th><th>ציון</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+function adminSetTopicGrade(cls, name, topicId, val){
+  const r=getReport(cls,name,topicId);
+  const parsed=val===''?null:Math.min(100,Math.max(0,parseInt(val)));
+  r.grade=parsed;
+  setReport(cls,name,topicId,r);
+  // refresh breakdown totals
+  const modal=document.getElementById('breakdownModal');
+  if(modal)modal.remove();
+  openGradeBreakdown(cls,name);
+  renderGradesTable(cls);
+  if(parsed!=null)syncGradeToDrive(cls,name,topicId,parsed,'');
+}
+
+// ============================================================
+// SYLLABUS (מתווה שנתי)
+// ============================================================
+let syllabusViewCls='ט';
+function buildSyllabusViewFilter(){
+  const f=document.getElementById('syllabusViewFilter');f.innerHTML='';
+  ['ט','י','יא','יב'].forEach(cls=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(syllabusViewCls===cls?' active':'');
+    b.textContent='כיתה '+cls+"'";
+    b.onclick=()=>{syllabusViewCls=cls;buildSyllabusViewFilter();renderSyllabusView(cls);};
+    f.appendChild(b);
+  });
+}
+function renderSyllabusView(cls){
+  const db=loadDB();
+  const topics=db.topics[cls]||[];
+  const div=document.getElementById('syllabusCurrentView');
+  if(topics.length===0){div.innerHTML='<div style="color:var(--muted);font-size:13px;">אין נושאים עדיין</div>';return;}
+  div.innerHTML=topics.map((t,i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;font-size:13px;">
+      <span>${i+1}. ${t.name}</span>
+      <button class="action-btn del" style="padding:4px 10px;" onclick="removeTopicFromSyllabus('${cls}','${t.id}')">🗑</button>
+    </div>
+  `).join('');
+}
+function addSyllabusTopics(){
+  const cls=document.getElementById('syllabusClass').value;
+  const raw=document.getElementById('syllabusTopics').value.trim();
+  if(!raw){toast('❗ הכנס נושאים','error');return;}
+  const names=raw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const db=loadDB();
+  db.topics[cls]=db.topics[cls]||[];
+  names.forEach(name=>{
+    if(!db.topics[cls].find(t=>t.name===name)){
+      db.topics[cls].push({id:'t_'+Date.now()+'_'+Math.random().toString(36).slice(2),name});
+    }
+  });
+  saveDB(db);
+  document.getElementById('syllabusTopics').value='';
+  renderSyllabusView(cls);
+  renderTopicsList();
+  toast('✅ '+names.length+' נושאים נוספו לכיתה '+cls,"'");
+}
+function clearClassTopics(){
+  const cls=document.getElementById('syllabusClass').value;
+  if(!confirm('למחוק את כל הנושאים של כיתה '+cls+"'?"))return;
+  const db=loadDB();
+  db.topics[cls]=[];
+  saveDB(db);
+  renderSyllabusView(cls);
+  renderTopicsList();
+  toast('🗑 כל הנושאים של כיתה '+cls+" נמחקו");
+}
+function removeTopicFromSyllabus(cls,id){
+  const db=loadDB();
+  db.topics[cls]=(db.topics[cls]||[]).filter(t=>t.id!==id);
+  saveDB(db);
+  renderSyllabusView(cls);
+  renderTopicsList();
+  toast('🗑 הנושא נמחק');
+}
+
+// ============================================================
+// ADMIN STUDENT VIEW
+// ============================================================
+function openAdminStudentView(cls, name){
+  document.getElementById('adminStudentModalTitle').textContent='👤 '+name+' — כיתה '+cls+"'";
+  const content=document.getElementById('adminStudentContent');
+  const topics=getTopicsForStudent(cls,name);
+  const db=loadDB();
+  const customPws=db.customPasswords||{};
+  const pwKey=cls+'::'+name;
+  const students=db.students[cls]||[];
+  const idx=students.indexOf(name);
+  const currentPw=customPws[pwKey]||String(idx+1);
+
+  let html=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:13px;color:var(--muted);">סיסמה נוכחית: <span style="color:var(--accent);font-weight:700">${currentPw}</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="openCustomPwModal('${cls}','${escHtml(name)}')">🔑 שנה סיסמה</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+  `;
+
+  topics.forEach(topic=>{
+    const r=getReport(cls,name,topic.id);
+    const tphoto=(db.teacherPhotos||{})[cls+'::'+name+'::'+topic.id]||null;
+    html+=`
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;border-right:3px solid ${r.submitted?'var(--green)':'var(--red)'};">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="status-dot ${r.submitted?'green':'red'}"></div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:14px;">${topic.name}</div>
+            <div style="font-size:11px;color:var(--muted);">${r.submitted?'✅ הוגש · '+r.filename+' · '+r.date:'🔴 טרם הוגש'}</div>
+            ${r.grade!=null?`<div style="font-size:12px;color:var(--accent);">ציון: ${r.grade}${r.feedback?' — '+r.feedback:''}</div>`:''}
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            ${r.submitted?`<button class="action-btn download" onclick="adminDownloadByKey('${cls}','${escHtml(name)}','${topic.id}')">⬇ הורד</button>`:''}
+            <button class="action-btn upload" onclick="openTeacherPhotoModal('${cls}','${escHtml(name)}','${topic.id}','${escHtml(topic.name)}')">
+              ${tphoto?'🖼 החלף תמונה':'📸 צרף תמונה'}
+            </button>
+            ${tphoto?`<button class="action-btn del" onclick="deleteTeacherPhoto('${cls}','${escHtml(name)}','${topic.id}')">🗑 מחק תמונה</button>`:''}
+            <button class="action-btn edit" onclick="adminOpenReportForStudent('${cls}','${escHtml(name)}','${topic.id}','${escHtml(topic.name)}')">
+              📋 פתח דוח
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  html+='</div>';
+  content.innerHTML=html;
+  openOverlay('adminStudentModal');
+}
+
+function adminDownloadByKey(cls,name,topicId){
+  const r=getReport(cls,name,topicId);
+  if(!r||!r.fileData){toast('❗ אין קובץ','error');return;}
+  const a=document.createElement('a');a.href=r.fileData;a.download=r.filename;a.click();
+}
+
+function adminOpenReportForStudent(cls,name,topicId,topicName){
+  // Admin opens a specific report slot for a student (marks as needing submission)
+  closeOverlay('adminStudentModal');
+  // Switch to student view as admin
+  state.cls=cls;state.name=name;
+  openStudentPage();
+  toast('📋 נפתח תצוגת תלמיד עבור '+name,'success');
+}
+
+// ============================================================
+// TEACHER PHOTO
+// ============================================================
+let tpTarget={cls:'',name:'',topicId:'',topicName:''};
+let tpPhotoData=null;
+
+function openTeacherPhotoModal(cls,name,topicId,topicName){
+  tpTarget={cls,name,topicId,topicName};
+  tpPhotoData=null;
+  document.getElementById('tpModalTitle').textContent='📸 תמונה עבור: '+topicName;
+  document.getElementById('tpModalSub').textContent=name+' — '+topicName;
+  document.getElementById('tpPreview').style.display='none';
+  document.getElementById('tpFileInput').value='';
+  closeOverlay('adminStudentModal');
+  openOverlay('teacherPhotoModal');
+}
+
+function onTeacherPhotoSelected(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    tpPhotoData=e.target.result;
+    document.getElementById('tpPreviewImg').src=tpPhotoData;
+    document.getElementById('tpPreview').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveTeacherPhoto(){
+  if(!tpPhotoData){toast('❗ בחר תמונה תחילה','error');return;}
+  const db=loadDB();
+  if(!db.teacherPhotos)db.teacherPhotos={};
+  db.teacherPhotos[tpTarget.cls+'::'+tpTarget.name+'::'+tpTarget.topicId]=tpPhotoData;
+  saveDB(db);
+  closeOverlay('teacherPhotoModal');
+  toast('✅ התמונה נשמרה! התלמיד יראה אותה בדוח שלו','success');
+}
+
+function deleteTeacherPhoto(cls,name,topicId){
+  if(!confirm('למחוק את התמונה?'))return;
+  const db=loadDB();
+  if(db.teacherPhotos)delete db.teacherPhotos[cls+'::'+name+'::'+topicId];
+  saveDB(db);
+  openAdminStudentView(cls,name);
+  toast('🗑 התמונה נמחקה');
+}
+
+// ============================================================
+// CUSTOM PASSWORD
+// ============================================================
+let cpTarget={cls:'',name:''};
+
+function openCustomPwModal(cls,name){
+  cpTarget={cls,name};
+  document.getElementById('customPwStudentName').textContent='תלמיד: '+name+' — כיתה '+cls+"'";
+  document.getElementById('customPwInput').value='';
+  closeOverlay('adminStudentModal');
+  openOverlay('customPwModal');
+}
+
+function saveCustomPassword(){
+  const val=document.getElementById('customPwInput').value.trim();
+  if(!val||isNaN(val)){toast('❗ הכנס מספר תקין','error');return;}
+  const db=loadDB();
+  if(!db.customPasswords)db.customPasswords={};
+  db.customPasswords[cpTarget.cls+'::'+cpTarget.name]=val;
+  saveDB(db);
+  closeOverlay('customPwModal');
+  toast('✅ הסיסמה עודכנה ל-'+val,'success');
+  renderPasswordList(cpTarget.cls);
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer=null;
+function toast(msg,type){
+  const ex=document.querySelector('.toast');if(ex)ex.remove();
+  if(toastTimer)clearTimeout(toastTimer);
+  const t=document.createElement('div');
+  t.className='toast '+(type||'');t.textContent=msg;
+  document.body.appendChild(t);
+  toastTimer=setTimeout(()=>t.remove(),3500);
+}
+
+// ============================================================
+// LOG SYSTEM
+// ============================================================
+function addLog(action, details){
+  const db=loadDB();
+  if(!db.log)db.log=[];
+  db.log.unshift({
+    ts:Date.now(),
+    time:new Date().toLocaleString('he-IL'),
+    action,details
+  });
+  // keep last 200 entries
+  if(db.log.length>200)db.log=db.log.slice(0,200);
+  saveDB(db);
+}
+function renderLog(){
+  const db=loadDB();
+  const list=document.getElementById('logList');
+  if(!list)return;
+  const log=db.log||[];
+  if(log.length===0){list.innerHTML='<div style="color:var(--muted);font-size:13px;">אין פעולות עדיין</div>';return;}
+  list.innerHTML=log.map(e=>`
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;gap:12px;align-items:flex-start;">
+      <span style="font-size:11px;color:var(--muted);flex-shrink:0;min-width:130px;">${e.time}</span>
+      <span style="font-size:13px;font-weight:600;color:var(--accent);flex-shrink:0;">${e.action}</span>
+      <span style="font-size:13px;color:var(--text);">${e.details}</span>
+    </div>
+  `).join('');
+}
+function clearLog(){
+  if(!confirm('למחוק את כל היומן?'))return;
+  const db=loadDB();db.log=[];saveDB(db);renderLog();toast('🗑 היומן נוקה');
+}
+
+// ============================================================
+// ALERTS
+// ============================================================
+let alertsFilterCls='all';
+function renderAlerts(){
+  // Build class filter
+  const f=document.getElementById('alertsClassFilter');
+  if(f){
+    f.innerHTML='';
+    ['all','ט','י','יא','יב'].forEach(cls=>{
+      const b=document.createElement('button');
+      b.className='filter-btn'+(alertsFilterCls===cls?' active':'');
+      b.textContent=cls==='all'?'כל הכיתות':'כיתה '+cls+"'";
+      b.onclick=()=>{alertsFilterCls=cls;renderAlerts();};
+      f.appendChild(b);
+    });
+  }
+
+  const db=loadDB();
+  const list=document.getElementById('alertsList');
+  if(!list)return;
+  const classes=alertsFilterCls==='all'?['ט','י','יא','יב']:[alertsFilterCls];
+  let alerts=[];
+
+  classes.forEach(cls=>{
+    (db.students[cls]||[]).forEach(name=>{
+      const topics=getTopicsForStudent(cls,name);
+      const missing=topics.filter(t=>!getReport(cls,name,t.id).submitted);
+      if(missing.length>=2){
+        alerts.push({cls,name,missing,total:topics.length});
+      }
+    });
+  });
+
+  if(alerts.length===0){
+    list.innerHTML='<div style="color:var(--green);font-size:14px;font-weight:600;">✅ אין תלמידים עם 2 חסרים או יותר!</div>';
+    return;
+  }
+
+  list.innerHTML=alerts.map(a=>`
+    <div style="background:var(--surface2);border:1px solid rgba(239,68,68,.3);border-right:4px solid var(--red);border-radius:var(--radius);padding:14px 16px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:14px;font-weight:700;cursor:pointer;color:var(--accent);"
+          onclick="openAdminStudentView('${a.cls}','${a.name.replace(/'/g,"\\'")}')">
+          ${a.name}
+        </span>
+        <span style="font-size:12px;color:var(--muted);">כיתה ${a.cls}'</span>
+        <span class="badge red">${a.missing.length} חסרים מתוך ${a.total}</span>
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted);">
+        ${a.missing.map(t=>'• '+t.name).join(' &nbsp;')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// MESSAGE TO STUDENTS
+// ============================================================
+function renderMessageTab(){
+  const db=loadDB();
+  const msg=db.adminMessage||null;
+  if(msg){
+    document.getElementById('msgTitle').value=msg.title||'';
+    document.getElementById('msgBody').value=msg.body||'';
+    document.getElementById('msgPreview').style.display='block';
+    document.getElementById('msgPreviewTitle').textContent=msg.title||'';
+    document.getElementById('msgPreviewBody').textContent=msg.body||'';
+  }
+}
+function saveMessage(){
+  const title=document.getElementById('msgTitle').value.trim();
+  const body=document.getElementById('msgBody').value.trim();
+  if(!title&&!body){toast('❗ הכנס כותרת או תוכן','error');return;}
+  const db=loadDB();
+  db.adminMessage={title,body,ts:Date.now(),time:new Date().toLocaleString('he-IL')};
+  saveDB(db);
+  document.getElementById('msgPreview').style.display='block';
+  document.getElementById('msgPreviewTitle').textContent=title;
+  document.getElementById('msgPreviewBody').textContent=body;
+  addLog('📢 הודעה','פורסמה הודעה: '+title);
+  toast('✅ ההודעה פורסמה — כל תלמיד יראה אותה בכניסה','success');
+}
+function clearMessage(){
+  if(!confirm('למחוק את ההודעה?'))return;
+  const db=loadDB();delete db.adminMessage;saveDB(db);
+  document.getElementById('msgTitle').value='';
+  document.getElementById('msgBody').value='';
+  document.getElementById('msgPreview').style.display='none';
+  toast('🗑 ההודעה נמחקה');
+}
+
+// ============================================================
+// STATS
+// ============================================================
+let statsFilterCls='ט';
+function renderStats(){
+  const f=document.getElementById('statsClassFilter');
+  if(f){
+    f.innerHTML='';
+    ['ט','י','יא','יב'].forEach(cls=>{
+      const b=document.createElement('button');
+      b.className='filter-btn'+(statsFilterCls===cls?' active':'');
+      b.textContent='כיתה '+cls+"'";
+      b.onclick=()=>{statsFilterCls=cls;renderStats();};
+      f.appendChild(b);
+    });
+  }
+  const db=loadDB();
+  const cls=statsFilterCls;
+  const students=db.students[cls]||[];
+  const content=document.getElementById('statsContent');
+  if(!content)return;
+  if(students.length===0){content.innerHTML='<div style="color:var(--muted)">אין תלמידים בכיתה זו</div>';return;}
+
+  const topics=cls==='יב'?[]:db.topics[cls]||[];
+  const totalStudents=students.length;
+
+  // Overall submission rate
+  let totalPossible=0,totalSubmitted=0;
+  students.forEach(name=>{
+    const t=getTopicsForStudent(cls,name);
+    totalPossible+=t.length;
+    totalSubmitted+=t.filter(tp=>getReport(cls,name,tp.id).submitted).length;
+  });
+  const overallPct=totalPossible>0?Math.round(totalSubmitted/totalPossible*100):0;
+
+  // Avg grade
+  let allGrades=[];
+  students.forEach(name=>{
+    getTopicsForStudent(cls,name).forEach(t=>{
+      const r=getReport(cls,name,t.id);
+      if(r.grade!=null)allGrades.push(r.grade);
+    });
+  });
+  const avgGrade=allGrades.length?Math.round(allGrades.reduce((a,b)=>a+b,0)/allGrades.length):null;
+
+  // Per-topic submission bars (not for יב personal)
+  let topicBars='';
+  if(cls!=='יב'&&topics.length>0){
+    topicBars='<div style="margin-top:20px;"><div style="font-weight:700;margin-bottom:12px;color:var(--accent);">הגשות לפי נושא</div>';
+    topics.forEach(t=>{
+      const sub=students.filter(name=>getReport(cls,name,t.id).submitted).length;
+      const pct=Math.round(sub/totalStudents*100);
+      const col=pct===100?'var(--green)':pct>60?'var(--accent)':'var(--red)';
+      topicBars+=`
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+            <span>${t.name}</span>
+            <span style="color:${col}">${sub}/${totalStudents} (${pct}%)</span>
+          </div>
+          <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+            <div style="height:100%;width:${pct}%;background:${col};transition:width .5s;border-radius:4px;"></div>
+          </div>
+        </div>`;
+    });
+    topicBars+='</div>';
+  }
+
+  // Grade distribution
+  const dist={excellent:0,good:0,pass:0,fail:0};
+  allGrades.forEach(g=>{
+    if(g>=90)dist.excellent++;
+    else if(g>=75)dist.good++;
+    else if(g>=60)dist.pass++;
+    else dist.fail++;
+  });
+
+  content.innerHTML=`
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">
+      <div class="stat-card" style="flex:1;min-width:120px;">
+        <div class="stat-num" style="color:var(--blue)">${totalStudents}</div>
+        <div class="stat-label">תלמידים בכיתה</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:120px;">
+        <div class="stat-num" style="color:${overallPct>70?'var(--green)':'var(--red)'}">${overallPct}%</div>
+        <div class="stat-label">אחוז הגשות כולל</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:120px;">
+        <div class="stat-num gold">${avgGrade!=null?avgGrade:'—'}</div>
+        <div class="stat-label">ממוצע ציונים</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:120px;">
+        <div class="stat-num" style="color:var(--green)">${dist.excellent}</div>
+        <div class="stat-label">מצטיינים (90+)</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:120px;">
+        <div class="stat-num" style="color:var(--red)">${dist.fail}</div>
+        <div class="stat-label">לא עוברים (&lt;60)</div>
+      </div>
+    </div>
+
+    ${topicBars}
+
+    <div style="margin-top:20px;">
+      <div style="font-weight:700;margin-bottom:12px;color:var(--accent);">דירוג תלמידים לפי הגשות</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        ${students.map(name=>{
+          const t=getTopicsForStudent(cls,name);
+          const sub=t.filter(tp=>getReport(cls,name,tp.id).submitted).length;
+          const pct=t.length>0?Math.round(sub/t.length*100):0;
+          const col=pct===100?'var(--green)':pct>60?'var(--accent)':'var(--red)';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;">
+            <span style="flex:1;font-size:13px;cursor:pointer;color:var(--accent);"
+              onclick="openAdminStudentView('${cls}','${name.replace(/'/g,"\\'")}')">
+              ${name}
+            </span>
+            <span style="font-size:12px;color:${col};">${sub}/${t.length}</span>
+            <div style="width:100px;height:6px;background:var(--surface);border-radius:3px;overflow:hidden;">
+              <div style="height:100%;width:${pct}%;background:${col};"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// BACKUP & RESTORE
+// ============================================================
+function renderBackupTab(){
+  const db=loadDB();
+  const info=document.getElementById('backupInfo');
+  if(!info)return;
+  const students=Object.values(db.students||{}).flat().length;
+  const reports=Object.values(db.reports||{}).filter(r=>r.submitted).length;
+  const size=Math.round(JSON.stringify(db).length/1024);
+  const lastBackup=db.lastBackup?new Date(db.lastBackup).toLocaleString('he-IL'):'לא בוצע גיבוי';
+  info.innerHTML=`
+    סה"כ תלמידים: <b style="color:var(--text)">${students}</b><br>
+    דוחות שהוגשו: <b style="color:var(--text)">${reports}</b><br>
+    גודל הנתונים: <b style="color:var(--text)">${size} KB</b><br>
+    גיבוי אחרון: <b style="color:var(--accent)">${lastBackup}</b>
+  `;
+}
+
+function exportBackup(){
+  const db=loadDB();
+  db.lastBackup=Date.now();
+  saveDB(db);
+  const json=JSON.stringify(db,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='transport_backup_'+new Date().toISOString().split('T')[0]+'.json';
+  a.click();
+  addLog('💾 גיבוי','גיבוי מלא יוצא בהצלחה');
+  toast('✅ הגיבוי הורד בהצלחה!','success');
+  renderBackupTab();
+}
+
+function importBackup(input){
+  const file=input.files[0];
+  if(!file)return;
+  if(!confirm('⚠ ייבוא זה ידרוס את כל הנתונים הקיימים!\nהמשך?'))return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.students){toast('❗ קובץ לא תקין','error');return;}
+      localStorage.setItem('transport_db',JSON.stringify(data));
+      addLog('⬆ שחזור','נתונים שוחזרו מגיבוי');
+      toast('✅ הנתונים שוחזרו בהצלחה! מרענן...','success');
+      setTimeout(()=>location.reload(),1500);
+    }catch(err){toast('❗ שגיאה בקריאת הקובץ','error');}
+  };
+  reader.readAsText(file);
+}
+
+function exportGradesExcel(){
+  const db=loadDB();
+  // Build CSV with BOM for Excel Hebrew support
+  let csv='\uFEFF';
+  csv+='שם תלמיד,כיתה,ממוצע דוחות,התנהלות,נוכחות,ציון סופי\n';
+  ['ט','י','יא','יב'].forEach(cls=>{
+    (db.students[cls]||[]).forEach(name=>{
+      const extra=(db.extraGrades||{})[cls+'::'+name]||{};
+      const topics=getTopicsForStudent(cls,name);
+      const graded=topics.map(t=>getReport(cls,name,t.id)).filter(r=>r.grade!=null);
+      const reportGrade=graded.length?Math.round(graded.reduce((s,r)=>s+r.grade,0)/graded.length):null;
+      const b=extra.behavior!=null?extra.behavior:null;
+      const a=extra.attendance!=null?extra.attendance:null;
+      const final=(reportGrade!=null&&b!=null&&a!=null)?Math.round(reportGrade*0.6+b*0.2+a*0.2):null;
+      csv+=`${name},${cls}',${reportGrade!=null?reportGrade:''},${b!=null?b:''},${a!=null?a:''},${final!=null?final:''}\n`;
+    });
+  });
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='ציונות_תחבורה_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+  addLog('📊 ייצוא','ייצוא ציונות לאקסל');
+  toast('✅ קובץ הציונות הורד — פתח עם Excel','success');
+}
+
+// ============================================================
+// LOCKED TOPICS
+// ============================================================
+function isTopicLocked(cls,topicId){
+  const db=loadDB();
+  return !!(db.lockedTopics||{})[cls+'::'+topicId];
+}
+function toggleTopicLock(cls,topicId,topicName){
+  const db=loadDB();
+  if(!db.lockedTopics)db.lockedTopics={};
+  const key=cls+'::'+topicId;
+  if(db.lockedTopics[key]){
+    delete db.lockedTopics[key];
+    toast('🔓 נושא '+topicName+' נפתח להגשה');
+    addLog('🔓 נפתח','נושא '+topicName+' נפתח');
+  } else {
+    db.lockedTopics[key]=true;
+    toast('🔒 נושא '+topicName+' נועל — לא ניתן עוד להגיש','success');
+    addLog('🔒 נועל','נושא '+topicName+' ננעל');
+  }
+  saveDB(db);
+  renderTopicsList();
+}
+
+</script>
+</body>
+</html>
