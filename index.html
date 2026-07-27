@@ -519,7 +519,7 @@ input[type=file]{display:none;}
       <div id="driveStatus" style="font-size:14px;margin-bottom:12px;"></div>
       <div class="form-group">
         <label class="form-label">כתובת Apps Script Web App (URL)</label>
-        <input type="text" class="form-control" id="driveUrlInput" placeholder="https://script.google.com/macros/s/AKfycbydzN3Vf0pisdPgGR4D-giDGUtDL1-bNeSkkCgI3BIEgggC15SFBer4Ul6yujmVCCh6AQ/exec
+        <input type="text" class="form-control" id="driveUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-primary" onclick="saveDriveUrl()">💾 שמור URL</button>
@@ -554,7 +554,7 @@ input[type=file]{display:none;}
           <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--green);">
             <div style="font-weight:700;color:var(--green);margin-bottom:4px;">צעד 4 — העתק את ה-URL</div>
             <div>לאחר הפרסום יופיע לך URL בפורמט:<br>
-            <span style="background:rgba(34,197,94,.1);padding:3px 10px;border-radius:4px;color:var(--green);font-size:11px;word-break:break-all;">https://script.google.com/macros/s/AKfycbydzN3Vf0pisdPgGR4D-giDGUtDL1-bNeSkkCgI3BIEgggC15SFBer4Ul6yujmVCCh6AQ/exec
+            <span style="background:rgba(34,197,94,.1);padding:3px 10px;border-radius:4px;color:var(--green);font-size:11px;word-break:break-all;">https://script.google.com/macros/s/XXXXX/exec</span><br>
             העתק אותו והדבק בשדה למעלה ולחץ "שמור URL"</div>
           </div>
           <div style="background:var(--surface);border-radius:10px;padding:14px;border-right:3px solid var(--blue);">
@@ -963,7 +963,7 @@ function autoScanStudentFromDrive(cls, name, callback){
 // GOOGLE DRIVE CONFIG
 // ============================================================
 const DRIVE_KEY='transport_drive_url';
-const PRESET_DRIVE_URL='https://script.google.com/macros/s/AKfycbydzN3Vf0pisdPgGR4D-giDGUtDL1-bNeSkkCgI3BIEgggC15SFBer4Ul6yujmVCCh6AQ/exec';
+const PRESET_DRIVE_URL='https://script.google.com/macros/s/AKfycbyWPUvMSZ6Tmc2ak9Z3znUAB95jTDhqmFSJgNBafSGxyDoJYIe_8xspQo0KlGemnV_17A/exec';
 function getDriveUrl(){return localStorage.getItem(DRIVE_KEY)||PRESET_DRIVE_URL;}
 function setDriveUrl(url){localStorage.setItem(DRIVE_KEY,url);}
 function hasDrive(){return true;} // always connected via preset URL
@@ -2034,7 +2034,7 @@ function renderAlumni(){
     const card=document.createElement('div');
     card.style.cssText='background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;';
     card.innerHTML=`<div style="font-weight:700;margin-bottom:8px;color:var(--accent);">🎓 ${year}</div>
-      ${alumni[year].map(s=>`<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">${s}</div>`).join('')}`;
+      ${(Array.isArray(alumni[year])?alumni[year]:Object.values(alumni[year]||{})).map(s=>`<div style="font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">${s}</div>`).join('')}`;
     div.appendChild(card);
   });
 }
